@@ -5,12 +5,12 @@
 
 \title{Problem Statement and Goals\\\progname}
 
-\author{\authname}
+\author{Fasil Cheema}
 
-\date{}
+%\date{}
 
-\input{../Comments}
-\input{../Common}
+%\input{../Comments}
+%\input{../Common}
 
 \begin{document}
 
@@ -22,35 +22,27 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date1 & Name(s) & Description of changes\\
-Date2 & Name(s) & Description of changes\\
-... & ... & ...\\
+Jan 19, 2024 & Fasil Cheema & Initial Upload\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \section{Problem Statement}
 
-\wss{You should check your problem statement with the
-\href{https://github.com/smiths/capTemplate/blob/main/docs/Checklists/ProbState-Checklist.pdf}
-{problem statement checklist}.}
-\wss{You can change the section headings, as long as you include the required information.}
+The optimization of functions is a critical problem that is prevalent in many domains; such as engineering, operations research, physical analysis of systems, business analysis, and machine learning to name a few. To solve these problems is therefore a critical task and having a family of solvers that can properly find solutions successfully, quickly, and efficiently is vital. Therefore, to address this we seek to develop a library of functions to solve a multitude of optimization problems. For the scope of this project we choose to focus on two families of algorithms, the first of which is Conjugate Gradient methods; which includes methods such as the Fletcher-Reeves method. The other family of algorithms is the Quasi-Newton family which includes the Broyden-Fletcher-Goldfarb-Shanno (BFGS) method and the David-Fletcher-Powell (DFP) algorithm. Overall there will be several functions such as the golden-section line search for one-dimensional minimization/maximization, and the Nelder-Mead simplex method as well, which can be incorporated into the more complex methods stated prior.
+\\
 
 \subsection{Problem}
 
 \subsection{Inputs and Outputs}
-
-\wss{Characterize the problem in terms of ``high level'' inputs and outputs.  
-Use abstraction so that you can avoid details.}
+The input to all the functions in the library of solvers would be a function $f$ which should be given in a certain appropriate parametric form, initial values and certain parametric choices left to the user that alter the solver's performance during the search (such as step size, or other parameters relevant to a specific algorithm).  So our problem is then given a function that satisfies certain constraints we should be able to use our library to output a solution which can either be a minimum or maximum (depending on the problem) to said problem, if possible.
+\\
 
 \subsection{Stakeholders}
-
+Many domains apply optimization algorithms to obtain satisfactory solutions to their problems. Anyone who wishes to use this library to solve their domain-specific task is a valid stakeholder which can include anyone in scientific computing, engineering, medicine, or machine learning. However, the stakeholders would likely be restricted to the class of technically competent individuals with some scientific background in optimization. 
 \subsection{Environment}
-
-\wss{Hardware and software}
+ The software should be reliable and be able to be run on multiple OS ranging from MacOS, Linux, UNIX, Windows and a multitude of devices (ranging from laptops to advanced clusters). Interpretability is also stressed so that future practitioners that seek to implement this library in their work can understand the functions. 
 
 \section{Goals}
-
-\section{Stretch Goals}
-
+The major goal of the project is given a function (in an appropriate format), a set of parameters for the relevant algorithms, initial value (if relevant) we wish to return a solution to the minimization/maximization problem. If possible we would like to create a more expansive library (time permitting) however if not possible we may choose to restrict the scope of our project to one family of solvers.
 \end{document}
