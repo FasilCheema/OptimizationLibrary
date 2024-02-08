@@ -160,22 +160,16 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 02/05/2024 & 1.0 & Initial Upload\\
-Date 2 & 1.1 & Notes\\
 \bottomrule
 \end{tabularx}
 
 ~\\
-\plt{This template is intended for use by CAS 741.  For CAS 741 the template
-should be used exactly as given, except the Reflection Appendix can be deleted.
-For the capstone course it is a source of ideas, but shouldn't be followed
-exactly.  The exception is the reflection appendix.  All capstone SRS documents
-should have a reflection appendix.}
 
 ~\newpage
 
 \section{Reference Material}
 
-This section records information for easy reference.
+This document is based off of a template of commonality analysis/SRS by Dr Spencer Smith \citep{Ssmith}.
 
 \subsection{Table of Units}
 
@@ -235,24 +229,15 @@ $\vv{\bm{x_0}}$ & \si[per-mode=symbol] {-} & $\vv{\bm{x^*}}$ is the $n \times 1$
 
 
 \subsection{Mathematical Notation}
- In this section we will introduce some mathematical notation which will be seen throughout the project and corresponding documentation. Most of the notation seen in this section and throughout the documentation will be consistent with most texts in the field \citep{strang09}. Boldface uppercase letters will denote matrices as seen in most texts, for example: $\mathbf{M}$ is a matrix. Vectors will always be denoted in boldface, lowercase letters with an arrow above for instance: $\vv{\bm{x}}.$ When a vector or matrix has a superscript $T$, this denotes the transpose operation; where $\mathbf{M}$ is a $m \times n$ matrix and therefore $\mathbf{M}^T$ becomes a $n \times m$ matrix. We may also utilize the dot product which will be denoted as $\cdot$; and the dot product of two vectors would be denoted as: $\vv{\bm{x}} \cdot \vv{\bm{y}}$, given that these two vectors are the same shape. For more discussion on these operations and notation please see the relevant literature \citep{strang09}. The other set of notation which may be seen will be the standard notation for denoting sets, relations, notation of real analysis and convex optimization. This is standardized in math and is consistent throughout textbooks, see for more information \citep{Boyd2005ConvexO}.
+ In this section we will introduce some mathematical notation which will be seen throughout the project and corresponding documentation. Most of the notation seen in this section and throughout the documentation will be consistent with most texts in the field \citep{strang09}. Boldface uppercase letters will denote matrices as seen in most texts, for example: $\mathbf{M}$ is a matrix. Vectors will always be denoted in boldface, lowercase letters with an arrow above for instance: $\vv{\bm{x}}.$ When a vector or matrix has a superscript $T$, this denotes the transpose operation; where $\mathbf{M}$ is a $m \times n$ matrix and therefore $\mathbf{M}^T$ becomes a $n \times m$ matrix. We may also utilize the dot product which will be denoted as $\cdot$; and the dot product of two vectors would be denoted as: $\vv{\bm{x}} \cdot \vv{\bm{y}}$, given that these two vectors are the same shape. For more discussion on these operations and notation please see the relevant literature \citep{strang09}. The other set of notation which may be seen will be the standard notation for denoting sets, relations, notation of real analysis and convex optimization. This is standardized in math and is consistent throughout textbooks, see for more information \citep{Boyd2005ConvexO,Hnig1972RealA,Press2002NumericalRI}.
 
-\plt{This section is optional, but should be included for projects that make use
-  of notation to convey mathematical information.  For instance, if typographic
-  conventions (like bold face font) are used to distinguish matrices, this
-  should be stated here.  If symbols are used to show mathematical operations,
-  these should be summarized here.  In some cases the easiest way to summarize
-  the notation is to point to a text or other source that explains the
-  notation.}
-  In this section we will introduce some mathematical notation which will be seen throughout the project and corresponding documentation. Boldface uppercase letters will denote matrices as seen in most texts, for example: $\mathbf{M}$ is a matrix. 
 
-\plt{This section was added to the template because some students use very
-  domain specific notation.  This notation will not be readily understandable to
-  people outside of your domain.  It should be explained.}
 
 \newpage
 
 \pagenumbering{arabic}
+
+\iffalse 
 
 \plt{This SRS template is based on \citet{SmithAndLai2005, SmithEtAl2007,
   SmithAndKoothoor2016}.  It will get you started.  You should not modify the
@@ -318,6 +303,7 @@ $\vv{\bm{x_0}}$ & \si[per-mode=symbol] {-} & $\vv{\bm{x^*}}$ is the $n \times 1$
   trust the authors of the SRS on any statements.  They should be able to
   independently verify/derive every statement made.}
 
+\fi 
 \section{Introduction}
 Function optimization is a critical task in many domains ranging from machine learning to finance. In many of these practical scenarios we are given a function that we seek to minimize or maximize and return an acceptable solution. More specifically when dealing with unconstrained optimization problems the setup is almost always identical; we are given the function we wish to minimize/maximize, we choose a particular optimizer, finally we input a choice of initial value and several hyperparameters relating to the optimizer such as the number of steps, the step size, the initial parameters of the optimizer to name a few. If given an optimization problem that has constraints the first objective is to first convert the problem into an unconstrained one. All our considerations will be assuming no constraints. For the task at hand we will focus specifically on function minimization. In machine learning the corresponding problem would be defining a loss function and then minimizing said loss function. In business the problem becomes defining a cost function in the business and minimizing the cost to maximize profits. Although different domains may have slightly different termiology the abstract problem they are trying to solve is the same.
 \\
@@ -352,7 +338,7 @@ Relatively recently there is huge growth in developing optimizers, therefore the
 Both families, generally all optimization problems, boil down to given initial conditions, a function, and necessary hyperparameters computing a search direction then updating and repeating this process until an acceptable solution is found. The `acceptability' of the solution, the search direction, and conducting updates are determined by the choice of family and moreso the particular algorithm. We can organize the optimizers by the style of choices made. As we discussed both families and their differences there are some key similarities. After obtaining a search direction update the iteration (this is the current iteration of the initial vector choice $\vv{\bm{x}}$) both families involve one-dimensional sub-minimization routines. 
 \\
 
-Clearly this problem domain is very general and abstract. To simplify the problem we apply several restrictions that keeps our problem feasible. We restrict the class of possible functions to simply those that can be expressed in the quadratic form this is our first assumption A1\ref{Assumption1}. We also restrict the dimensionality of the input vector to be finite and more explicitly define the max dimension in A2\ref{Assumption2}. We also have an assumption, A3\ref{Assumption3}, that cater well to our \textit{Conjugate-Gradient methods} where we assume that the matrix $\mathbf{A}$ is postive semi-definite (PSD), which implies it is symmetric \citep{Boyd2005ConvexO}. This is key because as we stated earlier the nature of the optimum; whether or not there exists local minima/maxima is dependent on this assumption. By assuming the matrix is PSD we know we are dealing with a convex optimization problem and this ensures we will have a global optimum. Finally, we choose to focus on function minimization, this task can be easily extended to function maximization but for this project we will have this sole focus.
+Clearly this problem domain is very general and abstract. To simplify the problem we apply several restrictions that keeps our problem feasible. We restrict the class of possible functions to simply those that can be expressed in the quadratic form this is our first assumption A\ref{assumption:convexity}. We also restrict the dimensionality of the input vector to be finite and more explicitly define the max dimension in A\ref{assumption:maxdim}. We also have an assumption, A\ref{assumption:quadratic}, that cater well to our \textit{Conjugate-Gradient methods} where we assume that the matrix $\mathbf{A}$ is postive semi-definite (PSD), which implies it is symmetric \citep{Boyd2005ConvexO}. This is key because as we stated earlier the nature of the optimum; whether or not there exists local minima/maxima is dependent on this assumption. By assuming the matrix is PSD we know we are dealing with a convex optimization problem and this ensures we will have a global optimum. Finally, we choose to focus on function minimization, this task can be easily extended to function maximization but for this project we will have this sole focus.
 
 
 \plt{Modelling the real world requires simplification.  The full complexity of
@@ -370,7 +356,7 @@ Clearly this problem domain is very general and abstract. To simplify the proble
   on the ``big picture'' assumptions.  The assumptions section lists, and
   describes, all of the assumptions.}
 
-\plt{The scope section is relevant for later determining typical values of inputs. The scope should make it clear what inputs are reasonable to expect. This is a distinction between scope and context (context is a later section).  Scope affects the inputs while context affects how the software will be used.}
+
 
 \subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
 The intended readers should have preliminary knowledge of function optimization. This would definitely be achieved if the individual has taken a course in convex optimization, numerical optimization, numerical methods, or discrete optimization. The reader should definitely have completed a high school mathematics curriculum and have a good grasp of preliminary mathematics taught in undergraduate degrees such as linear algebra and calculus. A reader should have knowledge on matrix operations, gradients, and Hessians.
