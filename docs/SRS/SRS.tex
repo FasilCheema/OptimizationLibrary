@@ -140,8 +140,8 @@
 
 \begin{document}
 
-\title{Software Requirements Specification for \progname: subtitle describing software} 
-\author{\authname}
+\title{Software Requirements Specification for Optimization Library} 
+\author{Fasil Cheema}
 \date{\today}
 	
 \maketitle
@@ -313,11 +313,7 @@ There are numerous resources to aid in solving problems of this nature, however 
 
 In this document we would like to outline the Software Requirement Specification (SRS) for our project which is developing a family of optimizers to minimize functions. This section introduces the project, the purpose of this document, the scope of requirements, the characteristics of the intended reader, and the organization of the SRS document.
 
-\plt{The introduction section is written to introduce the problem.  It starts
-  general and focuses on the problem domain. The general advice is to start with
-a paragraph or two that describes the problem, followed by a ``roadmap''
-paragraph.  A roadmap orients the reader by telling them what sub-sections to
-expect in the Introduction section.}
+
 
 \subsection{Purpose of Document}
 
@@ -341,20 +337,8 @@ Both families, generally all optimization problems, boil down to given initial c
 Clearly this problem domain is very general and abstract. To simplify the problem we apply several restrictions that keeps our problem feasible. We restrict the class of possible functions to simply those that can be expressed in the quadratic form this is our first assumption A\ref{assumption:convexity}. We also restrict the dimensionality of the input vector to be finite and more explicitly define the max dimension in A\ref{assumption:maxdim}. We also have an assumption, A\ref{assumption:quadratic}, that cater well to our \textit{Conjugate-Gradient methods} where we assume that the matrix $\mathbf{A}$ is postive semi-definite (PSD), which implies it is symmetric \citep{Boyd2005ConvexO}. This is key because as we stated earlier the nature of the optimum; whether or not there exists local minima/maxima is dependent on this assumption. By assuming the matrix is PSD we know we are dealing with a convex optimization problem and this ensures we will have a global optimum. Finally, we choose to focus on function minimization, this task can be easily extended to function maximization but for this project we will have this sole focus.
 
 
-\plt{Modelling the real world requires simplification.  The full complexity of
-  the actual physics, chemistry, biology is too much for existing models, and
-  for existing computational solution techniques.  Rather than say what is in
-  the scope, it is usually easier to say what is not.  You can think of it as
-  the scope is initially everything, and then it is constrained to create the
-  actual scope.  For instance, the problem can be restricted to 2 dimensions, or
-  it can ignore the effect of temperature (or pressure) on the material
-  properties, etc.}  
 
-\plt{The scope section is related to the assumptions section
-  (Section~\ref{sec_assumpt}).  However, the scope and the assumptions are not
-  at the same level of abstraction.  The scope is at a high level.  The focus is
-  on the ``big picture'' assumptions.  The assumptions section lists, and
-  describes, all of the assumptions.}
+
 
 
 
@@ -363,7 +347,7 @@ The intended readers should have preliminary knowledge of function optimization.
 \\
 
 \subsection{Organization of Document}
-This document adheres to the  Commonality Analysis Template which is related to the SRS template for the development of scientific computing software described by \citep{l}. This document will follow a top-down approach of going from high-level abstractions down to more specific details. This document contains the goals, assumptions, theory, necessary documentation for the software project. Note that although written with a particular flow of abstractions to instance models this document can be read ad-hoc for users who seek to utilize the software and readers can feel free to simply go to sections relevant to them. 
+This document adheres to the  Commonality Analysis Template which is related to the SRS template for the development of scientific computing software described by \citep{Ssmith}. This document will follow a top-down approach of going from high-level abstractions down to more specific details. This document contains the goals, assumptions, theory, necessary documentation for the software project. Note that although written with a particular flow of abstractions to instance models this document can be read ad-hoc for users who seek to utilize the software and readers can feel free to simply go to sections relevant to them. 
 \\
 
 
@@ -388,15 +372,6 @@ The first context can be seen in Figure \ref{img:FigureSystemContext} where a us
 \end{center}
 \end{figure}
 
-\plt{For each of the entities in the system context diagram its responsibilities
-  should be listed.  Whenever possible the system should check for data quality,
-  but for some cases the user will need to assume that responsibility.  The list
-  of responsibilities should be about the inputs and outputs only, and they
-  should be abstract.  Details should not be presented here.  However, the
-  information should not be so abstract as to just say ``inputs'' and
-  ``outputs''.  A summarizing phrase can be used to characterize the inputs.
-  For instance, saying ``material properties'' provides some information, but it
-  stays away from the detail of listing every required properties.}
 
 \begin{itemize}
 \item User Responsibilities:
@@ -634,12 +609,7 @@ The standard statement of function minimization. Given a function $f$, we wish t
 \end{tabular}
 \end{minipage}\\
 
-\subsubsection*{Detailed derivation of simplified rate of change of temperature}
 
-\plt{This may be necessary when the necessary information does not fit in the
-  description field.}
-\plt{Derivations are important for justifying a given GD.  You want it to be
-  clear where the equation came from.}
 
 \subsubsection{Data Definitions}\label{sec_datadef}
 
@@ -920,9 +890,6 @@ qualities that the software is expected to exhibit.
 
 \end{itemize}
 
-\plt{Every IM should map to at least one requirement, but not every requirement
-  has to map to a corresponding IM.}
-
 \subsection{Nonfunctional Requirements}
 
 Listed here are the nonfunctional requirements for the optimization library.
@@ -978,14 +945,7 @@ other. Table~\ref{Table:A_trace} shows the dependencies of theoretical models,
 general definitions, data definitions, instance models, and likely changes on
 the assumptions.
 
-\plt{You will have to modify these tables for your problem.}
 
-\plt{The traceability matrix is not generally symmetric.  If GD1 uses A1, that
-  means that GD1's derivation or presentation requires invocation of A1.  A1
-  does not use GD1.  A1 is ``used by'' GD1.}
-
-\plt{The traceability matrix is challenging to maintain manually.  Please do
-  your best.  In the future tools (like Drasil) will make this much easier.}
 
 \afterpage{
 \begin{landscape}
