@@ -20,7 +20,7 @@
 \title{Optimization Library: System Verification and Validation Plan} 
 
 \author{Fasil Cheema}
-\date{\today}
+\date{Feb 19, 2024}
 	
 \maketitle
 
@@ -31,34 +31,16 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Feb 19, 2023 & 1.0 & Initial Upload\\
+Feb 19, 2024 & 1.0 & Initial Upload\\
 \bottomrule
 \end{tabularx}
 
 ~\\
-\wss{The intention of the VnV plan is to increase confidence in the software.
-However, this does not mean listing every verification and validation technique
-that has ever been devised.  The VnV plan should also be a \textbf{feasible}
-plan. Execution of the plan should be possible with the time and team available.
-If the full plan cannot be completed during the time available, it can either be
-modified to ``fake it'', or a better solution is to add a section describing
-what work has been completed and what work is still planned for the future.}
 
-\wss{The VnV plan is typically started after the requirements stage, but before
-the design stage.  This means that the sections related to unit testing cannot
-initially be completed.  The sections will be filled in after the design stage
-is complete.  the final version of the VnV plan should have all sections filled
-in.}
 
 \newpage
 
 \tableofcontents
-
-\listoftables
-\wss{Remove this section if it isn't needed}
-
-\listoffigures
-\wss{Remove this section if it isn't needed}
 
 \newpage
 
@@ -80,12 +62,6 @@ in.}
 For further symbols and acronyms that are prevalant
 throughout the project please reference the SRS \citep{SRS}.
 
-
-\wss{symbols, abbreviations, or acronyms --- you can simply reference the SRS
-  \citep{SRS} tables, if appropriate}
-
-\wss{Remove this section if it isn't needed}
-
 \newpage
 
 \pagenumbering{arabic}
@@ -99,14 +75,12 @@ accomplish is state a plan that can test the compliance with the NFR and FR (ver
 that the software will meet the expectations of users (validation). Since this is a library, further a 
 numerical library, the primary tests will be accuracy of the software and reliability to give relatively 
 accurate solutions to users' specification. 
-\dots... \wss{provide an introductory blurb and roadmap of the
-  Verification and Validation plan}
+
 
 \section{General Information}
 
 \subsection{Summary}
-The main project 
-as discussed in the SRS \citep{SRS}, is to build a library of function optimizers. Specifically, we will
+The main project as discussed in the SRS \citep{SRS}, is to build a library of function optimizers. Specifically, we will
 focus on function minimization and restrict our library to a few solvers (see SRS). We will focus on the 
 David-Fletcher-Powell (DFP), Fletcher-Reeves conjugate gradient (FRCG), and Broyden-Fletcher-Goldfarb-Shanno (BFGS) algorithms. 
 These methods are split between two classes of function optimizers; Conjugate-Gradient (Fletcher-Reeves) and Quasi-Newton 
@@ -117,8 +91,6 @@ of solvers and optimization please reference the SRS \citep{SRS}.
 Our library will be used in the following manner; a user will call a specific minimizer listed prior, the user will provide the 
 function required to be minimized (in the appropriate format) with the specified parameters for the minimizer. The minimizer will
 return a solution based off the parameters given. 
-\wss{Say what software is being tested.  Give its name and a brief overview of
-  its general functions.}
 
 \subsection{Objectives}
 
@@ -137,23 +109,6 @@ which we will verify our solutions' `correctness' are reliable and have been tho
 the textbooks from which we will have test cases for our library. 
 
 
-\wss{State what is intended to be accomplished.  The objective will be around
-  the qualities that are most important for your project.  You might have
-  something like: ``build confidence in the software correctness,''
-  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
-  just those that are most important.}
-
-\wss{You should also list the objectives that are out of scope.  You don't have 
-the resources to do everything, so what will you be leaving out.  For instance, 
-if you are not going to verify the quality of usability, state this.  It is also 
-worthwhile to justify why the objectives are left out.}
-
-\wss{The objectives are important because they highlight that you are aware of 
-limitations in your resources for verification and validation.  You can't do everything, 
-so what are you going to prioritize?  As an example, if your system depends on an 
-external library, you can explicitly state that you will assume that external library 
-has already been verified by its implementation team.}
-
 \subsection{Relevant Documentation}
 The SRS, MG, and MIS are relevant documents to the VnV and will encompass the complete
 documentation for the Optimization Library. The SRS will contain a high-level explanation
@@ -163,15 +118,8 @@ This document is great for understanding certain design decisions and the purpos
 The MG and MIS documents are important to illustrate the purpose of each module and how they
 interact with each other. These documents coupled with the VnV should allow a reader to go through 
 the whole software development process for this project.
-\wss{Reference relevant documentation.  This will definitely include your SRS
-  and your other project documents (design documents, like MG, MIS, etc).  You
-  can include these even before they are written, since by the time the project
-  is done, they will be written.}
 
 \citet{SRS}
-
-\wss{Don't just list the other documents.  You should explain why they are relevant and 
-how they relate to your VnV efforts.}
 
 \section{Plan}
 In this section we provide a roadmap for our VnV. We wish to ensure the valdity of our work
@@ -179,8 +127,6 @@ as such we will have a team reviewing our documentation ensuring our ideas are c
 line with the goals we seek to acheive \citep{SRS}. We will also introduce multiple tests that 
 are expansive enough to give confidence to future users that our library will do what we expect
 it to do. 
-\wss{Introduce this section.   You can provide a roadmap of the sections to
-  come.}
 
 \subsection{Verification and Validation Team}
 
@@ -190,9 +136,6 @@ it to do.
   \item Secondary Reviewer: Dr Spencer Smith
   \item Secondary Reviewer: Xinyu
 \end{itemize}
-\wss{Your teammates.  Maybe your supervisor.
-  You should do more than list names.  You should say what each person's role is
-  for the project's verification.  A table is a good way to summarize this information.}
 
 \subsection{SRS Verification Plan}
 For the SRS verification plan a critical component will be taking criticisms from the 
@@ -202,24 +145,13 @@ This checklist will contain information to check over grammatical errors such as
 grammar etc. We will also ensure the checklist covers major concepts we should have in our SRS such 
 as proper documentation of the high level concept of the convex optimization.
 
-\wss{List any approaches you intend to use for SRS verification.  This may include
-  ad hoc feedback from reviewers, like your classmates, or you may plan for 
-  something more rigorous/systematic.}
-
-\wss{Maybe create an SRS checklist?}
-
 \subsection{Design Verification Plan}
 
-\wss{Plans for design verification}
 
 This section introduces the plan for design verification. For this plan we will have 
 team members reviewing the high level calculations of the functions are correct.
 Domain experts are going to ensure these calculations are line with the original 
 algorithms.
-
-\wss{The review will include reviews by your classmates}
-
-\wss{Create a checklists?}
 
 \subsection{Verification and Validation Plan Verification Plan}
 
@@ -227,12 +159,6 @@ We will ensure the validity of the plan by checking with our reviewers and
 their feedback. The VnV feedback will be implemented into the plan accordingly.
 We will also have a checklist to ensure the VnV plan covers all bases from minor 
 things such as spelling quality, to major high level tests that need to be verified.
-\wss{The verification and validation plan is an artifact that should also be
-verified. Techniques for this include review and mutation testing.}
-
-\wss{The review will include reviews by your classmates}
-
-\wss{Create a checklists?}
 
 \subsection{Implementation Verification Plan}
 
@@ -242,32 +168,13 @@ in Python with a linter; PyLint. We will also have a code inspection and do rubb
 testing. We will also conduct unit testing for modules 
 within the testing scope. Details for unit testing can be found in section 4.
 
-\wss{You should at least point to the tests listed in this document and the unit
-  testing plan.}
-
-\wss{In this section you would also give any details of any plans for static
-  verification of the implementation.  Potential techniques include code
-  walkthroughs, code inspection, static analyzers, etc.}
 
 \subsection{Automated Testing and Verification Tools}
 In this section we will use several tools for automated testing. We will use the PyTest
  (Unittest) framework. This will allow multiple unit tests to be created and conducted.
  We will also employ PyLint as the linter of choice for ensuring we avoid unnecessary
  mistakes in the code. 
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-  Python.}
 
-\wss{If you have already done this in the development plan, you can point to
-that document.}
-
-\wss{The details of this section will likely evolve as you get closer to the
-  implementation.}
 
 \subsection{Software Validation Plan}
 There is a textbook for convex optimization problems \citep{Boyd2006} where known
@@ -276,35 +183,14 @@ if our algorithm will output the correct solution when given certain parameters.
 There are also libraries that have trusted builds of the minimizers we seek to make. 
 Scipy comes built in with a minimizer function that allows us to use any specific
 minimizer we want including the ones presented in this doc (DFP,BFGS, FRCG).
-\wss{If there is any external data that can be used for validation, you should
-  point to it here.  If there are no plans for validation, you should state that
-  here.}
 
-\wss{You might want to use review sessions with the stakeholder to check that
-the requirements document captures the right requirements.  Maybe task based
-inspection?}
-
-\wss{For those capstone teams with an external supervisor, the Rev 0 demo should 
-be used as an opportunity to validate the requirements.  You should plan on 
-demonstrating your project to your supervisor shortly after the scheduled Rev 0 demo.  
-The feedback from your supervisor will be very useful for improving your project.}
-
-\wss{For teams without an external supervisor, user testing can serve the same purpose 
-as a Rev 0 demo for the supervisor.}
-
-\wss{This section might reference back to the SRS verification section.}
 
 \section{System Test Description}
 
 \subsection{Tests for Functional Requirements}
 Functional Tests are given for this document in the SRS \citep{SRS}. We will have input 
 We will have input tests for our functional requirements in \citep{SRS}.
-\wss{Subsets of the tests may be in related, so this section is divided into
-  different areas.  If there are no identifiable subsets for the tests, this
-  level of document structure can be removed.}
 
-\wss{Include a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.}
 \subsubsection{Input}
 These tests will attempt to verify the following requirements also found in the SRS:
 \begin{itemize}
@@ -317,10 +203,7 @@ FR 1 states that the matrices, and vectors in a function we seek to minimize sho
 of appropriate size. That is, we should not have an error when attempting to conduct matrix 
 operations. Consequently, FR2 states that the function shall notify the user in the case where 
 this occurs; a size mismatch. This section will cover the area of testing related to these 2 FR. 
-\wss{It would be nice to have a blurb here to explain why the subsections below
-  cover the requirements.  References to the SRS would be good here.  If a section
-  covers tests for input constraints, you should reference the data constraints
-  table in the SRS.}
+
 		
 \paragraph{Tests for FR1, FR2}
 
@@ -341,7 +224,7 @@ will have the scalar $c$ be set to 1 for all the tests.
 Output: Valid (True)  
 
 Test Case Derivation: The size mismatch detector should not have an issue accepting these
-inputs. They should all pass. \wss{Justify the expected value given in the Output field}
+inputs. They should all pass. 
 					
 How test will be performed: Utilizing PyTest we will set the unit tests with the
 appropriate dimensions as specified above. 
@@ -362,10 +245,10 @@ but we will ensure they are always different. In other words we will try all
 possible permutations of dimensions for both the matrix and vector where the
 dimensions of both are not equal.
 					
-Output: The size mismatch detector should detect a problem and raise an error. \wss{The expected result for the given inputs}
+Output: The size mismatch detector should detect a problem and raise an error.
 
 Test Case Derivation: This is an invalid size and further in the library there will be invalid 
-matrix operations (cannot do matrix multiplication for matrices of invalid sizes). \wss{Justify the expected value given in the Output field}
+matrix operations (cannot do matrix multiplication for matrices of invalid sizes).
 
 How test will be performed: Utilizing PyTest we will set the unit tests with the
 appropriate dimensions as specified above.
@@ -376,16 +259,6 @@ appropriate dimensions as specified above.
 The main test for the NFR will be related to accuracy. We will like to ensure that 
 our solution from the algorithm of choice is within the specified accuracy parameter 
 to the solution from the corresponding trusted solution.
-\wss{The nonfunctional requirements for accuracy will likely just reference the
-  appropriate functional tests from above.  The test cases should mention
-  reporting the relative error for these tests.  Not all projects will
-  necessarily have nonfunctional requirements related to accuracy}
-
-\wss{Tests related to usability could include conducting a usability test and
-  survey.  The survey will be in the Appendix.}
-
-\wss{Static tests, review, inspections, and walkthroughs, will not follow the
-format for the tests given below.}
 
 \subsubsection{Area of Testing1}
 		
@@ -493,34 +366,27 @@ NFR (PSD Test 1 Full step).
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
-
-...
-
 \subsection{Traceability Between Test Cases and Requirements}
 \begin{table}[h!]
   \centering
   \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
   \hline        
-    & FR1& FR2 & NFR1 & NFR2& NFR3 & NFR4& NFR5\\
+    & Test F1& Test F2 & Test NF1 & Test NF2& Test NF3 & Test NF4& Test NF5\\
   \hline
-  TM:CON                    &X & & & & & & &  \\ \hline
-  GD\ref{gd:funcmin}        &X & & & & & & &  \\ \hline
-  DD\ref{dd:DotProd}      & &X & & & & & &  \\ \hline
-  DD\ref{dd:Transpose} & & &X & & & & &  \\ \hline
-  DD\ref{dd:Gradient}  & & & &X & & & &  \\ \hline
-  DD\ref{dd:Hessian}    & & & & & X& & &  \\ \hline
-  IM\ref{im:linesearch}     & &X &X &X & &X & &  \\ \hline
-  IM\ref{im:CGsearchdirection}      & &X &X &X & & & X&  \\ \hline
-  IM\ref{im:QNsearchdirection}      & &X &X &X &X & & &X  \\ \hline
+  FR1                    &X &X & & & & & \\ \hline
+  FR2        & & & & & & &  \\ \hline
+  NFR1      & & &X &X &X & &  \\ \hline
+  NFR2 & & & & & & &  \\ \hline
+  NFR3  & & & & & & &  \\ \hline
+  NFR4    & & & & & &X &X \\ \hline
+  NFR5     & & & & &  & &  \\ \hline
   
   \end{tabular}
-  \caption{Traceability Matrix Showing the Connections Between Items of Different Sections}
+  \caption{Traceability Matrix Showing the Connections Between Test Cases and Functional Requirements}
   \label{Table:trace}
   \end{table}
-\wss{Provide a table that shows which test cases are supporting which
-  requirements.}
 
+\iffalse 
 \section{Unit Test Description}
 
 \wss{This section should not be filled in until after the MIS (detailed design
@@ -645,13 +511,14 @@ How test will be performed:
 \subsection{Traceability Between Test Cases and Modules}
 
 \wss{Provide evidence that all of the modules have been considered.}
-				
+\fi 
 \bibliographystyle{plainnat}
 
 \bibliography{../../refs/References}
 
-\newpage
+\iffalse 
 
+\newpage
 \section{Appendix}
 
 This is where you can place additional information.
@@ -690,5 +557,7 @@ graduate attribute of Lifelong Learning.  Please answer the following questions:
   mastering the skill?  Of the identified approaches, which will each team
   member pursue, and why did they make this choice?
 \end{enumerate}
+
+\fi 
 
 \end{document}
