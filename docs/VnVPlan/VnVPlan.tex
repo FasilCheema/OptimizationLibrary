@@ -17,8 +17,9 @@
 
 \begin{document}
 
-\title{Project Title: System Verification and Validation Plan for \progname{}} 
-\author{\authname}
+\title{Optimization Library: System Verification and Validation Plan} 
+
+\author{Fasil Cheema}
 \date{\today}
 	
 \maketitle
@@ -30,8 +31,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+Feb 19, 2023 & 1.0 & Initial Upload\\
 \bottomrule
 \end{tabularx}
 
@@ -70,8 +70,16 @@ in.}
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   T & Test\\
+  VnV & Verification and Validation\\
+  FR & Functional Requirement\\
+  NFR & Non-Functional Requirement\\
+  MG & Module Guide\\
+  MIS & Module Interface Specification\\
   \bottomrule
 \end{tabular}\\
+For further symbols and acronyms that are prevalant
+throughout the project please reference the SRS \citep{SRS}.
+
 
 \wss{symbols, abbreviations, or acronyms --- you can simply reference the SRS
   \citep{SRS} tables, if appropriate}
@@ -82,17 +90,52 @@ in.}
 
 \pagenumbering{arabic}
 
-This document ... \wss{provide an introductory blurb and roadmap of the
+This document is the system Verification and Validation plan (Syst VnV plan). This document introduces
+the plan to verify the correctness and the validity of the software being developed.  For the VnV plan we
+will state the FR and the NFR, and try to map out a plan to successfully achieve success on all necessary 
+requirements. We will state all necessary details in this document for a reader to be able to map out and 
+build their own system tests for the corresponding software. The primary objective this document seeks to
+accomplish is state a plan that can test the compliance with the NFR and FR (verification). Also, to ensure 
+that the software will meet the expectations of users (validation). Since this is a library, further a 
+numerical library, the primary tests will be accuracy of the software and reliability to give relatively 
+accurate solutions to users' specification. 
+\dots... \wss{provide an introductory blurb and roadmap of the
   Verification and Validation plan}
 
 \section{General Information}
 
 \subsection{Summary}
+The main project 
+as discussed in the SRS \citep{SRS}, is to build a library of function optimizers. Specifically, we will
+focus on function minimization and restrict our library to a few solvers (see SRS). We will focus on the 
+David-Fletcher-Powell (DFP), Fletcher-Reeves conjugate gradient (FRCG), and Broyden-Fletcher-Goldfarb-Shanno (BFGS) algorithms. 
+These methods are split between two classes of function optimizers; Conjugate-Gradient (Fletcher-Reeves) and Quasi-Newton 
+methods (DFP and BFGS). Both of these classes still share the common idea of a line search. For further detail on the families
+of solvers and optimization please reference the SRS \citep{SRS}.
+\\
 
+Our library will be used in the following manner; a user will call a specific minimizer listed prior, the user will provide the 
+function required to be minimized (in the appropriate format) with the specified parameters for the minimizer. The minimizer will
+return a solution based off the parameters given. 
 \wss{Say what software is being tested.  Give its name and a brief overview of
   its general functions.}
 
 \subsection{Objectives}
+
+It is important to note these optimizers are not oracles; as such we do not
+expect them to return the correct global minimum each time. The `correct' solution we seek is the output expected from running
+the specific optimizer with the specified parameters. Therefore, the expected stated primary objective of finding a `correct' 
+solution comes with some caveats. We will therefore prioritize our libraries accuracy to their respective algorithms. We wish
+to build a library of function minimizers that faithfully follow the computation of the original algorithm design, even if that
+is an incorrect solution.  To summarize we wish to build confidence in the software's faithfulness to the original algorithm's 
+expected solutions. We will also expect the user to be able to call the function and the library to execute several modules working
+in unison without a hitch. 
+We will also wish to demonstrate usability for the expected users of this software. We will not ensure this is the most efficient 
+realization of these algorithms; as this is out of the scope of this project. There are numerous high-computing libaries that have
+created the algorithms we are building and we do not wish to compete with them. We will also expect that the external libraries from 
+which we will verify our solutions' `correctness' are reliable and have been thoroughly tested. We will also hold this standard for
+the textbooks from which we will have test cases for our library. 
+
 
 \wss{State what is intended to be accomplished.  The objective will be around
   the qualities that are most important for your project.  You might have
@@ -112,7 +155,14 @@ external library, you can explicitly state that you will assume that external li
 has already been verified by its implementation team.}
 
 \subsection{Relevant Documentation}
-
+The SRS, MG, and MIS are relevant documents to the VnV and will encompass the complete
+documentation for the Optimization Library. The SRS will contain a high-level explanation
+of the purpose, execution, and ideas behind this project. It will also define common themes
+between the different minimizers, and give a high-level walkthrough of function optimization. 
+This document is great for understanding certain design decisions and the purpose of each module.
+The MG and MIS documents are important to illustrate the purpose of each module and how they
+interact with each other. These documents coupled with the VnV should allow a reader to go through 
+the whole software development process for this project.
 \wss{Reference relevant documentation.  This will definitely include your SRS
   and your other project documents (design documents, like MG, MIS, etc).  You
   can include these even before they are written, since by the time the project
@@ -124,17 +174,33 @@ has already been verified by its implementation team.}
 how they relate to your VnV efforts.}
 
 \section{Plan}
-
+In this section we provide a roadmap for our VnV. We wish to ensure the valdity of our work
+as such we will have a team reviewing our documentation ensuring our ideas are correct and in 
+line with the goals we seek to acheive \citep{SRS}. We will also introduce multiple tests that 
+are expansive enough to give confidence to future users that our library will do what we expect
+it to do. 
 \wss{Introduce this section.   You can provide a roadmap of the sections to
   come.}
 
 \subsection{Verification and Validation Team}
 
+\begin{itemize}
+  \item Author: Fasil Cheema
+  \item Primary Reviewer: Morteza Mirzaei
+  \item Secondary Reviewer: Dr Spencer Smith
+  \item Secondary Reviewer: Xinyu
+\end{itemize}
 \wss{Your teammates.  Maybe your supervisor.
   You should do more than list names.  You should say what each person's role is
   for the project's verification.  A table is a good way to summarize this information.}
 
 \subsection{SRS Verification Plan}
+For the SRS verification plan a critical component will be taking criticisms from the 
+reviewers of the SRS. We will implement these criticisms into our updated document. 
+We will also have a checklist for the SRS to ensure we maintain the quality of the document. 
+This checklist will contain information to check over grammatical errors such as spelling mistakes,
+grammar etc. We will also ensure the checklist covers major concepts we should have in our SRS such 
+as proper documentation of the high level concept of the convex optimization.
 
 \wss{List any approaches you intend to use for SRS verification.  This may include
   ad hoc feedback from reviewers, like your classmates, or you may plan for 
@@ -146,20 +212,35 @@ how they relate to your VnV efforts.}
 
 \wss{Plans for design verification}
 
+This section introduces the plan for design verification. For this plan we will have 
+team members reviewing the high level calculations of the functions are correct.
+Domain experts are going to ensure these calculations are line with the original 
+algorithms.
+
 \wss{The review will include reviews by your classmates}
 
 \wss{Create a checklists?}
 
 \subsection{Verification and Validation Plan Verification Plan}
 
+We will ensure the validity of the plan by checking with our reviewers and
+their feedback. The VnV feedback will be implemented into the plan accordingly.
+We will also have a checklist to ensure the VnV plan covers all bases from minor 
+things such as spelling quality, to major high level tests that need to be verified.
 \wss{The verification and validation plan is an artifact that should also be
-verified.  Techniques for this include review and mutation testing.}
+verified. Techniques for this include review and mutation testing.}
 
 \wss{The review will include reviews by your classmates}
 
 \wss{Create a checklists?}
 
 \subsection{Implementation Verification Plan}
+
+The verification plan will be done by testing all the FR and
+NFR. The tests can be found in section 4. In addition, we will check over our code built
+in Python with a linter; PyLint. We will also have a code inspection and do rubber duck
+testing. We will also conduct unit testing for modules 
+within the testing scope. Details for unit testing can be found in section 4.
 
 \wss{You should at least point to the tests listed in this document and the unit
   testing plan.}
@@ -169,7 +250,10 @@ verified.  Techniques for this include review and mutation testing.}
   walkthroughs, code inspection, static analyzers, etc.}
 
 \subsection{Automated Testing and Verification Tools}
-
+In this section we will use several tools for automated testing. We will use the PyTest
+ (Unittest) framework. This will allow multiple unit tests to be created and conducted.
+ We will also employ PyLint as the linter of choice for ensuring we avoid unnecessary
+ mistakes in the code. 
 \wss{What tools are you using for automated testing.  Likely a unit testing
   framework and maybe a profiling tool, like ValGrind.  Other possible tools
   include a static analyzer, make, continuous integration tools, test coverage
@@ -186,7 +270,12 @@ that document.}
   implementation.}
 
 \subsection{Software Validation Plan}
-
+There is a textbook for convex optimization problems \citep{Boyd2006} where known
+solutions for their respective algorithms are known. This will be useful to verify 
+if our algorithm will output the correct solution when given certain parameters.
+There are also libraries that have trusted builds of the minimizers we seek to make. 
+Scipy comes built in with a minimizer function that allows us to use any specific
+minimizer we want including the ones presented in this doc (DFP,BFGS, FRCG).
 \wss{If there is any external data that can be used for validation, you should
   point to it here.  If there are no plans for validation, you should state that
   here.}
@@ -206,63 +295,87 @@ as a Rev 0 demo for the supervisor.}
 \wss{This section might reference back to the SRS verification section.}
 
 \section{System Test Description}
-	
-\subsection{Tests for Functional Requirements}
 
+\subsection{Tests for Functional Requirements}
+Functional Tests are given for this document in the SRS \citep{SRS}. We will have input 
+We will have input tests for our functional requirements in \citep{SRS}.
 \wss{Subsets of the tests may be in related, so this section is divided into
   different areas.  If there are no identifiable subsets for the tests, this
   level of document structure can be removed.}
 
 \wss{Include a blurb here to explain why the subsections below
   cover the requirements.  References to the SRS would be good here.}
-
-\subsubsection{Area of Testing1}
-
+\subsubsection{Input}
+These tests will attempt to verify the following requirements also found in the SRS:
+\begin{itemize}
+  \item R1: The function and input vector are in the specified dimension which does not exceed
+  maximum defined dimension.
+  \item R2: The function will notify user of invalid data size (matrix shape mismatch)
+\end{itemize}
+\subsubsection{Area of Testing1-Functional Requirements 1,2}
+FR 1 states that the matrices, and vectors in a function we seek to minimize should all be
+of appropriate size. That is, we should not have an error when attempting to conduct matrix 
+operations. Consequently, FR2 states that the function shall notify the user in the case where 
+this occurs; a size mismatch. This section will cover the area of testing related to these 2 FR. 
 \wss{It would be nice to have a blurb here to explain why the subsections below
   cover the requirements.  References to the SRS would be good here.  If a section
   covers tests for input constraints, you should reference the data constraints
   table in the SRS.}
 		
-\paragraph{Title for Test}
+\paragraph{Tests for FR1, FR2}
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{test-Default, non-problematic, inputs\\}
 
-Control: Manual versus Automatic
+Control: Automatic
 					
-Initial State: 
+Initial State: Pending  
 					
-Input: 
+Input:for matrix $\mathbf{A}$, vector $\mathbf{\vec{b}}$, scalar $c$
+We have for $\mathbf{A}$: this matrix will be the identity matrix ranging 
+from dimensions 1 to our max dimension 6. We will have $\mathbf{\vec{b}}$
+also be a vector of 1s ranging from dimensions 1 to 6 as well. Finally we 
+will have the scalar $c$ be set to 1 for all the tests. 
 					
-Output: \wss{The expected result for the given inputs}
+Output: Valid (True)  
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+Test Case Derivation: The size mismatch detector should not have an issue accepting these
+inputs. They should all pass. \wss{Justify the expected value given in the Output field}
 					
-How test will be performed: 
+How test will be performed: Utilizing PyTest we will set the unit tests with the
+appropriate dimensions as specified above. 
 					
-\item{test-id2\\}
+\item{test-Problematic Input\\}
 
-Control: Manual versus Automatic
+Control: Automatic
 					
-Initial State: 
+Initial State: Pending
 					
-Input: 
+Input: for matrix $\mathbf{A}$, vector $\mathbf{\vec{b}}$, scalar $c$
+We have for $\mathbf{A}$: this matrix will be the identity matrix ranging 
+from dimensions 1 to our max dimension 6. We will have $\mathbf{\vec{b}}$
+also be a vector of 1s ranging from dimensions 1 to 6 as well. Finally we 
+will have the scalar $c$ be set to 1 for all the tests. For this test we 
+will not have the dimension of $\mathbf{A}$ and $\mathbf{\vec{b}}$ be the same
+but we will ensure they are always different. In other words we will try all 
+possible permutations of dimensions for both the matrix and vector where the
+dimensions of both are not equal.
 					
-Output: \wss{The expected result for the given inputs}
+Output: The size mismatch detector should detect a problem and raise an error. \wss{The expected result for the given inputs}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+Test Case Derivation: This is an invalid size and further in the library there will be invalid 
+matrix operations (cannot do matrix multiplication for matrices of invalid sizes). \wss{Justify the expected value given in the Output field}
 
-How test will be performed: 
+How test will be performed: Utilizing PyTest we will set the unit tests with the
+appropriate dimensions as specified above.
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
-
-...
-
 \subsection{Tests for Nonfunctional Requirements}
-
+The main test for the NFR will be related to accuracy. We will like to ensure that 
+our solution from the algorithm of choice is within the specified accuracy parameter 
+to the solution from the corresponding trusted solution.
 \wss{The nonfunctional requirements for accuracy will likely just reference the
   appropriate functional tests from above.  The test cases should mention
   reporting the relative error for these tests.  Not all projects will
@@ -276,33 +389,107 @@ format for the tests given below.}
 
 \subsubsection{Area of Testing1}
 		
-\paragraph{Title for Test}
+\paragraph{PSD Test 1 Full step }
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{PSD Test 1 Full step}\
 
-Type: Functional, Dynamic, Manual, Static etc.
+Type: Automatic
 					
-Initial State: 
+Initial State: Pending
 					
-Input/Condition: 
+Input/Condition: $\mathbf{A}$ will be the identity matrix ranging from
+1 to 6 dimensions. $\mathbf{\vec{b}}$ will be a vector of 1s ranging from 1 
+6 dimensions along with $\mathbf{A}$. The scalar $c$ will be set to 1. We will
+use one of each algorithm (DFP, FRCG, and BFGS) with a full step (step size set to 1),
+an initial starting choice of the zero vector for the corresponding dimension. For the 
+quasi-newton methods we will have an initial Hessian, $H_{0}$, set tot be the identity 
+matrix of the corresponding dimensionality. 
 					
-Output/Result: 
+Output/Result: Relative Error of the two vectors (utilizing the norm of a vector). 
 					
-How test will be performed: 
-					
-\item{test-id2\\}
+How test will be performed: We will compute our respective algorithms then conduct the same 
+computation via our trusted source (scipy.minmize('bfgs')...) and then compute the relative 
+error. This is done by taking the norm of the difference of the two vectors over the norm of
+the `true' solution. If this is below the threshold we specify: accuracy parameter ($\epsilon_{acc} = 1\%$) 
 
-Type: Functional, Dynamic, Manual, Static etc.
+
+\item{PSD Test 2 adaptive Step}\
+
+Type: Automatic
 					
-Initial State: 
+Initial State: Pending
+					
+Input/Condition: $\mathbf{A}$ will be the identity matrix ranging from
+1 to 6 dimensions. $\mathbf{\vec{b}}$ will be a vector of 1s ranging from 1 
+6 dimensions along with $\mathbf{A}$. The scalar $c$ will be set to 1. We will
+use one of each algorithm (DFP, FRCG, and BFGS) with an adaptive step size,
+an initial starting choice of the zero vector for the corresponding dimension. For the 
+quasi-newton methods we will have an initial Hessian, $H_{0}$, set tot be the identity 
+matrix of the corresponding dimensionality. In this case the adaptive step size requires 
+the individual algorithm to calculate the step size at each iteration. This is catered for 
+each individual algorithm and adds another degree of complexity.
+					
+Output/Result: Relative Error of the two vectors (utilizing the norm of a vector). 
+					
+How test will be performed: We will compute our respective algorithms then conduct the same 
+computation via our trusted source (scipy.minmize('bfgs')...) and then compute the relative 
+error. This is done by taking the norm of the difference of the two vectors over the norm of
+the `true' solution. If this is below the threshold we specify: accuracy parameter ($\epsilon_{acc} = 1\%$) 
+
+\item{non-PSD Test 2 adaptive Step}\
+
+Type: Automatic
+					
+Initial State: Pending
+					
+Input/Condition: $\mathbf{A}$ will be the identity matrix ranging from
+1 to 6 dimensions, except the first entry will be $-1000$. This makes the matrix non-PSD
+this is to violate the assumptions of our algorithms which require a PSD matrix to converge 
+to a global minima. $\mathbf{\vec{b}}$ will be a vector of 1s ranging from 1 
+6 dimensions along with $\mathbf{A}$. The scalar $c$ will be set to 1. We will
+use one of each algorithm (DFP, FRCG, and BFGS) with an adaptive step size,
+an initial starting choice of the zero vector for the corresponding dimension. For the 
+quasi-newton methods we will have an initial Hessian, $H_{0}$, set tot be the identity 
+matrix of the corresponding dimensionality. In this case the adaptive step size requires 
+the individual algorithm to calculate the step size at each iteration. This is catered for 
+each individual algorithm and adds another degree of complexity.
+					
+Output/Result: Relative Error of the two vectors (utilizing the norm of a vector). 
+					
+How test will be performed: We will compute our respective algorithms then conduct the same 
+computation via our trusted source (scipy.minmize('bfgs')...) and then compute the relative 
+error. This is done by taking the norm of the difference of the two vectors over the norm of
+the `true' solution. If this is below the threshold we specify: accuracy parameter ($\epsilon_{acc} = 1\%$) 
+
+\item{Portability Test 1- Linux\\}
+
+Type: Manual 
+					
+Initial State: Pending
 					
 Input: 
 					
 Output: 
 					
-How test will be performed: 
+How test will be performed: Using the conda environment, on a fresh build of ubuntu 22.0
+we wish to first install the environment then run the library with the first test for the 
+NFR (PSD Test 1 Full step).
+
+\item{Portability Test 2- Windows\\}
+
+Type: Manual 
+					
+Initial State: Pending
+					
+Input: 
+					
+Output: 
+					
+How test will be performed: Using the conda environment, on windows 11
+we wish to first install the environment then run the library with the first test for the 
+NFR (PSD Test 1 Full step).
 
 \end{enumerate}
 
@@ -311,7 +498,26 @@ How test will be performed:
 ...
 
 \subsection{Traceability Between Test Cases and Requirements}
-
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline        
+    & FR1& FR2 & NFR1 & NFR2& NFR3 & NFR4& NFR5\\
+  \hline
+  TM:CON                    &X & & & & & & &  \\ \hline
+  GD\ref{gd:funcmin}        &X & & & & & & &  \\ \hline
+  DD\ref{dd:DotProd}      & &X & & & & & &  \\ \hline
+  DD\ref{dd:Transpose} & & &X & & & & &  \\ \hline
+  DD\ref{dd:Gradient}  & & & &X & & & &  \\ \hline
+  DD\ref{dd:Hessian}    & & & & & X& & &  \\ \hline
+  IM\ref{im:linesearch}     & &X &X &X & &X & &  \\ \hline
+  IM\ref{im:CGsearchdirection}      & &X &X &X & & & X&  \\ \hline
+  IM\ref{im:QNsearchdirection}      & &X &X &X &X & & &X  \\ \hline
+  
+  \end{tabular}
+  \caption{Traceability Matrix Showing the Connections Between Items of Different Sections}
+  \label{Table:trace}
+  \end{table}
 \wss{Provide a table that shows which test cases are supporting which
   requirements.}
 
