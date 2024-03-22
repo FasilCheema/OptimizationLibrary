@@ -20,6 +20,13 @@
 \usepackage{caption}
 \usepackage{fullpage}
 
+
+%added by me: Fasil Cheema
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{esvect}
+%end
+
 \hypersetup{
 bookmarks=true,     % show bookmarks bar?
 colorlinks=true,       % false: boxed links; true: colored links
@@ -33,16 +40,61 @@ urlcolor=cyan          % color of external links
 
 \externaldocument{../../SRS/SRS}
 
-\input{../../Comments}
-\input{../../Common}
+
+% For easy change of table widths
+\newcommand{\colZwidth}{1.0\textwidth}
+\newcommand{\colAwidth}{0.13\textwidth}
+\newcommand{\colBwidth}{0.82\textwidth}
+\newcommand{\colCwidth}{0.1\textwidth}
+\newcommand{\colDwidth}{0.05\textwidth}
+\newcommand{\colEwidth}{0.8\textwidth}
+\newcommand{\colFwidth}{0.17\textwidth}
+\newcommand{\colGwidth}{0.5\textwidth}
+\newcommand{\colHwidth}{0.28\textwidth}
+
+% Used so that cross-references have a meaningful prefix
+\newcounter{defnum} %Definition Number
+\newcommand{\dthedefnum}{GD\thedefnum}
+\newcommand{\dref}[1]{GD\ref{#1}}
+\newcounter{datadefnum} %Datadefinition Number
+\newcommand{\ddthedatadefnum}{DD\thedatadefnum}
+\newcommand{\ddref}[1]{DD\ref{#1}}
+\newcounter{theorynum} %Theory Number
+\newcommand{\tthetheorynum}{TM\thetheorynum}
+\newcommand{\tref}[1]{TM\ref{#1}}
+\newcounter{tablenum} %Table Number
+\newcommand{\tbthetablenum}{TB\thetablenum}
+\newcommand{\tbref}[1]{TB\ref{#1}}
+\newcounter{assumpnum} %Assumption Number
+\newcommand{\atheassumpnum}{A\theassumpnum}
+\newcommand{\aref}[1]{A\ref{#1}}
+\newcounter{goalnum} %Goal Number
+\newcommand{\gthegoalnum}{GS\thegoalnum}
+\newcommand{\gsref}[1]{GS\ref{#1}}
+\newcounter{instnum} %Instance Number
+\newcommand{\itheinstnum}{IM\theinstnum}
+\newcommand{\iref}[1]{IM\ref{#1}}
+\newcounter{reqnum} %Requirement Number
+\newcommand{\rthereqnum}{R\thereqnum}
+\newcommand{\rref}[1]{R\ref{#1}}
+\newcounter{nfrnum} %NFR Number
+\newcommand{\rthenfrnum}{NFR\thenfrnum}
+\newcommand{\nfrref}[1]{NFR\ref{#1}}
+\newcounter{lcnum} %Likely change number
+\newcommand{\lthelcnum}{LC\thelcnum}
+\newcommand{\lcref}[1]{LC\ref{#1}}
+
+
+\input{Comments.tex}
+\input{Common.tex}
 
 \begin{document}
 
-\title{Module Interface Specification for \progname{}}
+\title{Module Interface Specification for OptLib}
 
-\author{\authname}
+\author{Fasil Cheema}
 
-\date{\today}
+\date{March 18, 2024}
 
 \maketitle
 
@@ -53,8 +105,7 @@ urlcolor=cyan          % color of external links
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+March 17, 2024 & 1.0 & Initial Upload
 \bottomrule
 \end{tabularx}
 
@@ -62,9 +113,46 @@ Date 2 & 1.1 & Notes\\
 
 \section{Symbols, Abbreviations and Acronyms}
 
-See SRS Documentation at \wss{give url}
+See SRS Documentation which can be found at \url{https://github.com/FasilCheema/OptimizationLibrary/blob/main/docs/SRS/SRS.pdf}
 
-\wss{Also add any additional symbols, abbreviations or acronyms}
+\renewcommand{\arraystretch}{1.2}
+\noindent \begin{tabularx}{1.0\textwidth}{l l X}
+%\noindent \begin{longtable*}{l l p{22cm}} \toprule
+\textbf{symbol} & \textbf{description}\\
+\midrule 
+$\mathbf{A}$ & $\mathbf{A}$ is the $n \times n$ coefficient matrix of the quadratic.
+\\
+$\vv{\bm{b}}$ & $\vv{\bm{b}}$ is the $n \times 1$ column vector that is the coefficient of the linear term. 
+\\ 
+$c$ & $c$ is the constant (real number) that is the constant term in the quadratic.
+\\
+$f$ & $f$ is the function of we are trying to minimize, defined by the above three parameters.  
+\\
+$d$ & $d$ is a natural number and is the dimension of our problem. 
+\\
+$t$ & $t$ is the natural number that is the current step.
+\\
+$\vv{x}_{t}$ & $\vv{x}_{t}$ is the $n \times 1$ column vector that is our current solution.
+\\
+$\vv{x}_{0}$ & $\vv{x}_{t}$ is the $n \times 1$ column vector that is our initial `guess' of the solution.
+\\
+$\mathbf{H}_0$ & $\mathbf{H}_0$ is the $n \times n$ initial approximation of our Hessian matrix.
+\\
+$\mathbf{H}_t$ & $\mathbf{H}_t$ is the $n \times n$ approximation of our Hessian matrix at the $t_{th}$ step.
+\\
+$\mathbf{B}_0$ & $\mathbf{B}_0$ is the $n \times n$ initial approximation of the inverse of our Hessian matrix.
+\\
+$\mathbf{B}_t$ & $\mathbf{B}_t$ is the $n \times n$ approximation of the inverse of our Hessian matrix at the $t_{th}$ step.
+\\
+$\vv{s}_{t}$ & $\vv{s}_{t}$ is the $n \times 1$ column vector that is our current search direction.
+\\
+$\alpha_{t}$ & $\alpha_{t}$ is the real number that is our current step size.
+\\
+$\vv{p}_{t}$ & $\vv{p}_{t}$ is the $n \times 1$ column vector that is the product of the step size and search direction.
+\\
+\bottomrule
+%\end{longtable*}
+\end{tabularx}
 
 \newpage
 
@@ -76,18 +164,13 @@ See SRS Documentation at \wss{give url}
 
 \section{Introduction}
 
-The following document details the Module Interface Specifications for
-\wss{Fill in your project name and description}
+The following document details the Module Interface Specifications for OptLib, a library of optimization solvers.
 
 Complementary documents include the System Requirement Specifications
 and Module Guide.  The full documentation and implementation can be
-found at \url{...}.  \wss{provide the url for your repo}
+found at \url{https://github.com/FasilCheema/OptimizationLibrary}.
 
 \section{Notation}
-
-\wss{You should describe your notation.  You can use what is below as
-  a starting point.}
-
 The structure of the MIS for modules comes from \citet{HoffmanAndStrooper1995},
 with the addition that template modules have been adapted from
 \cite{GhezziEtAl2003}.  The mathematical notation comes from Chapter 3 of
@@ -95,7 +178,7 @@ with the addition that template modules have been adapted from
 multiple assignment statement and conditional rules follow the form $(c_1
 \Rightarrow r_1 | c_2 \Rightarrow r_2 | ... | c_n \Rightarrow r_n )$.
 
-The following table summarizes the primitive data types used by \progname. 
+The following table summarizes the primitive data types used by OptLib. 
 
 \begin{center}
 \renewcommand{\arraystretch}{1.2}
@@ -108,15 +191,16 @@ character & char & a single symbol or digit\\
 integer & $\mathbb{Z}$ & a number without a fractional component in (-$\infty$, $\infty$) \\
 natural number & $\mathbb{N}$ & a number without a fractional component in [1, $\infty$) \\
 real & $\mathbb{R}$ & any number in (-$\infty$, $\infty$)\\
+boolean & $\mathbb{B}$ & a binary variable in \{TRUE, FALSE\}\\
 \bottomrule
 \end{tabular} 
 \end{center}
 
 \noindent
-The specification of \progname \ uses some derived data types: sequences, strings, and
+The specification of OptLib uses some derived data types: sequences, strings, and
 tuples. Sequences are lists filled with elements of the same data type. Strings
 are sequences of characters. Tuples contain a list of values, potentially of
-different types. In addition, \progname \ uses functions, which
+different types. In addition, OptLib uses functions, which
 are defined by the data types of their inputs and outputs. Local functions are
 described by giving their type signature followed by their specification.
 
@@ -134,18 +218,19 @@ The following table is taken directly from the Module Guide document for this pr
 {Hardware-Hiding} & ~ \\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding} & Input Parameters\\
-& Output Format\\
-& Output Verification\\
-& Temperature ODEs\\
-& Energy Equations\\ 
-& Control Module\\
-& Specification Parameters Module\\
+\multirow{7}{0.3\textwidth}{Behaviour-Hiding}
+& Main Module\\
+& Parameter Configuration\\
+& Vector Math Module\\
+& Gradient Calculation\\
+& Step-Size Calculator\\
+& Search Direction Calculator\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision} & {Sequence Data Structure}\\
-& ODE Solver\\
-& Plotting\\
+\multirow{3}{0.3\textwidth}{Software Decision}
+& Input Verification\\
+& Output Verification\\
+& Optimization Solver\\
 \bottomrule
 
 \end{tabular}
@@ -156,24 +241,31 @@ The following table is taken directly from the Module Guide document for this pr
 \newpage
 ~\newpage
 
-\section{MIS of \wss{Module Name}} \label{Module} \wss{Use labels for
-  cross-referencing}
-
-\wss{You can reference SRS labels, such as R\ref{R_Inputs}.}
-
-\wss{It is also possible to use \LaTeX for hypperlinks to external documents.}
+\section{MIS of Main Module}\label{Module:MainParam}
 
 \subsection{Module}
+main
 
-\wss{Short name for the module}
 
 \subsection{Uses}
-
+\begin{itemize}
+    \item Vector Math Module
+    \item Input Verification Module
+    \item Output Verification Module
+    \item Parameter Configuration Module
+    \item Gradient Calculation
+    \item Step-Size Calculator
+    \item Search Direction Calculator
+    \item Optimization Solver
+\end{itemize}
+\begin{itemize}
+    \item Hardware hiding module
+\end{itemize}
 
 \subsection{Syntax}
 
 \subsubsection{Exported Constants}
-
+None
 \subsubsection{Exported Access Programs}
 
 \begin{center}
@@ -181,14 +273,740 @@ The following table is taken directly from the Module Guide document for this pr
 \hline
 \textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
 \hline
-\wss{accessProg} & - & - & - \\
+main & - & - & - \\
 \hline
 \end{tabular}
 \end{center}
 
 \subsection{Semantics}
-
 \subsubsection{State Variables}
+None
+
+\subsubsection{Environment Variables}
+None
+
+\subsubsection{Assumptions}
+
+
+\subsubsection{Access Routine Semantics}
+
+\noindent main():
+\begin{itemize}
+\item transition: the control module acts as the entry point to the library. It oversees the order of execution of the different modules and allows for seamless communication between different modules:
+\begin{itemize}
+    \item Select the function to use to minimize via the Optimization Solver Module
+    \item The Input Parameter Module then verifies if the parameters are in the appropriate format.
+    \item If the input parameters are valid then the Parameter Configuration module is populated with the appropriate values.
+    \item If no exceptions occur, the Step Size Calculator Module computes the appropriate step size, this is called from the Optimization Solver. This will heavily use the vector math, gradient calculation, and the parameter configuration modules.
+    \item Again, barring no exceptions, the Search Direction Calculator module computes a search direction, this is called from the Optimization Solver module. This will heavily use the vector math, gradient calculation, and the parameter configuration modules.
+    \item The Optimization Solver Module continues with the specific computation given the step size, search direction, vector math, gradient calculation, and the parameter configuration modules are used.
+    \item The Output Verification Module is used after each iteration to see if the optimizer has reached a sufficient minimum. 
+\end{itemize}
+\item output: None (returns to the program that called the function)
+\item exception: Various exceptions can occur in sub modules
+\end{itemize}
+
+
+\subsubsection{Local Functions}
+
+None
+
+\section{MIS of Input Verification}\label{Module:InputVerify}
+
+\subsection{Module}
+inputverify
+
+
+\subsection{Uses}
+\begin{itemize}
+    \item Parameter Configuration Module
+    \item Hardware hiding module
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+inputVerify & params & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+\subsubsection{State Variables}
+$d$(dim): This is the dimensionality of our problem. This is recorded based off the input and is used to ensure the consistency of the parameters' dimensions. This is a natural number $\in \mathbb{N}$ that should be less than the max dimension specified in the configuration module.
+\\
+
+\noindent valid: This is the state of the input parameters. If the input are invalid then this variable takes the value FALSE. It is set to TRUE by default (it is a Boolean variable).
+\\
+
+\noindent err\_msg: This is the error message associated with the termination of the program. This is a string. 
+
+\subsubsection{Environment Variables}
+
+\subsubsection{Assumptions}
+
+\subsubsection{Access Routine Semantics}
+
+\noindent inputVerify(A\_mat, b\_vec, c, x\_0, H\_0, step\_size, max\_s, min\_err):
+\begin{itemize}
+\item transition: 
+verifies each of the input parameters to an optimizer:
+
+$\mathbf{A},$(A\_mat): This is the matrix A. This should be a square matrix of reals $\mathbb{R}^{d \times d}$. First checks if a square numpy array was input and records the dimension. Ensures the dimension is below the value of MAX\_DIM from the constants of the parameter configuration module and is also a square matrix; otherwise changes the value of valid to FALSE. The variable err\_msg is updated accordingly, and the local function displayErrMsg(err\_msg) is invoked.
+\\
+
+\noindent$\vv{b},$(b\_vec): The vector b which defines the linear term in the quadratic function we are trying to minimize. This should be a numpy array of reals $\in \mathbb{R}^d$. If the dimension is not equal to the dimension state variable or it is not in the appropriate data type (or shape) the value of valid becomes FALSE. The variable err\_msg is updated accordingly, and the local function displayErrMsg(err\_msg) is invoked. 
+\\
+
+\noindent$c,$(c): The scalar c should be a real number $\in \mathbb{R}$. This is checked; if it is not the value of valid is FALSE. The variable err\_msg is updated accordingly, and the local function displayErrMsg(err\_msg) is invoked.
+\\
+
+\noindent $\vv{x}_0,$(x\_0): The vector x\_0 which is the initial `guess' of our solution. This should be a numpy array of reals $\in \mathbb{R}^d$. If the dimension is not equal to the dimension state variable or it is not in the appropriate data type (or shape) the value of valid becomes FALSE. The variable err\_msg is updated accordingly, and the local function displayErrMsg(err\_msg) is invoked.
+\\
+
+\noindent $\mathbf{H}_0,$(H\_0): This is the matrix H\_0, this is our initial `guess' of our Hessian (for BFGS only). This should be a square numpy matrix of reals $\in \mathbb{R}^{d \times d}$. If the dimension is not equal to the dimension of A\_mat or it is not in the appropriate data type (or shape) the value of valid becomes FALSE. The variable err\_msg is updated accordingly, and the local function displayErrMsg(err\_msg) is invoked.
+\\
+
+\noindent $\mathbf{B}_0,$(H\_0): This is the matrix B\_0, this is our initial `guess' of the inverse of our Hessian (for DFP only). This should be a square numpy matrix of reals $\in \mathbb{R}^{d \times d}$. If the dimension is not equal to the dimension of A\_mat or it is not in the appropriate data type (or shape) the value of valid becomes FALSE. The variable err\_msg is updated accordingly, and the local function displayErrMsg(err\_msg) is invoked.
+\\
+
+\noindent step\_size: The step size the minimizer the user wishes to use. This should be a positive real (or -1, if not specified; by default). If it is not the value of valid becomes FALSE. The variable err\_msg is updated accordingly, and the local function displayErrMsg(err\_msg) is invoked.
+\\
+
+\noindent $\text{max}_s,$(max\_s): This is the maximum number of steps. If not specified a value will be taken from the constants module. This should be a natural number $\in \mathbb{N}$. This should also not exceed the upper bound of number of steps (to not run into  excessive runtimes; this is specified in the parameters configuration module). If any of these conditions fail then the value of valid becomes FALSE. The variable err\_msg is updated accordingly, and the local function displayErrMsg(err\_msg) is invoked. 
+\\
+
+\noindent $\epsilon$(min\_err): This is the minimum acceptable error to terminate the program early. This should be a scalar real number $\in \mathbb{R}$ below 1 and above 0. This is checked, if these conditions fail then the value of valid becomes FALSE. The variable err\_msg is updated accordingly, and the local function displayErrMsg(err\_msg) is invoked.
+\item output: None  
+\item exception: N/A
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+displayErrMsg(err\_msg): This function takes the state variable err\_msg and displays the error message if invoked. 
+
+
+
+\section{MIS of Parameter Configuration}\label{Module:ParamConfig}
+
+\subsection{Module}
+paramconfig
+
+
+\subsection{Uses}
+\begin{itemize}
+    \item Optimization Solver Module 
+    \item Hardware hiding module
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+\noindent $\text{upper}_d,$(UPPER\_STEP\_SIZE)$ = 50000$: This is the default upper bound on the number of steps to avoid excessive runtimes.
+\\
+
+\noindent $\text{max}_d,$(MAX\_DIM)$ = 6$: This is the default maximum dimensionality.
+\\
+
+\noindent $\text{max}_s,$(MAX\_STEP)$ = 10000$: This is the default maximum number of steps.
+\\
+
+\noindent $\text{max}_s,$(MAX\_STEP)$ = 10000$: This is the default maximum number of steps.
+\\
+
+\noindent $\epsilon$(MIN\_ERR)$= 0.005$: This is the default minimum acceptable error to terminate the program early. This number is compared to the gradient of a possible solution. The idea is to try to get the gradient to 0.
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+- & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+\subsubsection{State Variables}
+$\mathbf{A},$(A\_mat): This is the matrix A, given a quadratic function we are trying to minimize this will stay the same no matter the change in choice of optimizer. This value is the coefficient matrix for the quadratic term of our equation. This is a square matrix of reals $\in \mathbb{R}^{d \times d}$.
+\\
+
+\noindent$\vv{b},$(b\_vec): The vector b which defines the linear term in the quadratic function we are trying to minimize. This is a vector of reals $\in \mathbb{R}^d$.
+\\
+
+\noindent$c,$(c): The scalar c which defines the constant term in the quadratic function we are trying to minimize. This is a real number $\in \mathbb{R}$.
+\\
+
+\noindent $\vv{x}_0,$(x\_0): The vector x\_0 which is the initial `guess' of our solution. This is a vector of reals $\in \mathbb{R}^d$.
+\\
+
+\noindent $\mathbf{H}_0,$(H\_0): This is the matrix H\_0, this is our initial `guess' of our Hessian (for BFGS). This is a square matrix of reals $\in \mathbb{R}^{d \times d}$.
+\\
+
+\noindent $\mathbf{B}_0,$(B\_0): This is the matrix B\_0, this is our initial `guess' of the inverse of our Hessian (for DFP). This is a square matrix of reals $\in \mathbb{R}^{d \times d}$.
+\\
+
+\noindent $\text{step}_s,$(step\_size): This is the step size specified by the user. If not specified a value will be taken from the constants of this module. If the default value of -1, this indicates to the optimizer module to use an exact line search (The program will have to compute a step size at each iteration). This is a positive real if specified $\in \mathbb{R}^{+}$.
+\\
+
+\noindent $\text{max}_s,$(max\_s): This is the maximum number of steps. If not specified a value will be taken from the constants of this module. This is a natural number $\in \mathbb{N}$.
+\\
+
+\noindent $\epsilon$(min\_err): This is the minimum acceptable error to terminate the program early. If not specified a value will be taken from the constants of this module. This is a scalar real number $\in \mathbb{R}$.
+
+\subsubsection{Environment Variables}
+
+None
+
+\subsubsection{Assumptions}
+
+That our function is a quadratic and in the standardized form specified (see SRS). 
+
+\subsubsection{Access Routine Semantics}
+None
+
+
+\subsubsection{Local Functions}
+
+None
+
+
+\section{MIS of Vector Math Module}\label{Module:VectorMath}
+
+\subsection{Module}
+vecmath
+
+
+\subsection{Uses}
+\begin{itemize}
+    \item Hardware Hiding Module
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+vecAdd & vectors/matrices of dimensions $\mathbb{R}^{n\times m}$ & vector/matrix of type $\mathbb{R}^{n\times m}$ & Dimension Error \& Type Error \\
+vecProd & vectors/matrices of dimensions $\mathbb{R}^{n\times l},\mathbb{R}^{l\times m}$ & vector/matrix of type $\mathbb{R}^{n\times m}$ & Dimension Error \& Type Error \\
+inverse & matrices of dimensions $\mathbb{R}^{n\times n}$ & matrix of type $\mathbb{R}^{n\times n}$ & Dimension Error \& Type Error \\
+vecDot & vectors of dimensions $\mathbb{R}^{n}$ & scalar of type $\mathbb{R}$ & Dimension Error \& Type Error \\
+vecT & vectors/matrices of dimensions $\mathbb{R}^{n \times m}$ & vectors/matrices of type $\mathbb{R}^{m \times n}$ & Dimension Error \& Type Error \\
+vecNorm & Computes the Euclidean norm of a vector  $\mathbb{R}^{n}$ & scalar of type $\mathbb{R}$ & Dimension Error \& Type Error \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+\subsubsection{State Variables}
+None
+\subsubsection{Environment Variables}
+None
+
+\subsubsection{Assumptions}
+All input vectors/matrices are of the correct type and are verified initially in the Input Verification module.
+\subsubsection{Access Routine Semantics}
+\noindent
+vecAdd(mat1, mat2):
+\begin{itemize}
+\item transition: Takes two matrices of the same dimension (checks this) and adds them together.
+\item output: outputs a matrix with the same dimension as the input matrices.
+\\
+out $:=$ matrix $\mathbf{x}$
+\item exception: exc$:=$
+\subitem -  Dimension Error: If matrices are not the same dimension
+\subitem - Type Error: If one or both the matrices are not numpy arrays of reals.
+\end{itemize}
+vecProd(mat1, mat2):
+\begin{itemize}
+\item transition: Takes two matrices of appropriate dimensions ($\mathbb{R}^{n\times l}$ and $\mathbb{R}^{l\times m}$ this is checked) and multiplies them together.
+\item output: outputs a matrix of appropriate dimension $\mathbb{R}^{n\times m}$.
+\\
+out $:=$ matrix $\mathbf{x}$
+\item exception: exc$:=$
+\subitem -  Dimension Error: If matrices are not in the appropriate dimension
+\subitem - Type Error: If one or both the matrices are not numpy arrays of reals.
+\end{itemize}
+inverse(mat1):
+\begin{itemize}
+\item transition: Takes a square matrix($\mathbb{R}^{n\times n}$ this is checked) and computes the inverse.
+\item output: outputs a matrix with the same dimension as the input matrices.
+\\
+out $:=$ matrix $\mathbf{x}$
+\item exception: exc$:=$
+\subitem -  Dimension Error: If matrices are not the same dimension
+\subitem - Type Error: If one or both the matrices are not numpy arrays of reals.
+\end{itemize}
+vecDot(vec1, vec2):
+\begin{itemize}
+\item transition: Takes two vectors of the same size ($\mathbb{R}^{n}$ this is checked) and computes the dot product. A scalar value is returned ($\mathbb{R}$).
+\item output: outputs a real scalar
+\\
+out $:=$ scalar $x$
+\item exception: exc$:=$
+\subitem -  Dimension Error: If vectors do not have the same dimension
+\subitem - Type Error: If one or both the vectors are not numpy arrays of reals.
+\end{itemize}
+vecT(mat1):
+\begin{itemize}
+\item transition: Takes a matrix of size $\mathbb{R}^{n \times m}$ and returns a matrix that is the transpose of size $\mathbb{R}^{m \times n}$
+\item output: outputs a matrix with reversed dimension of the input matrices.
+\\
+out $:=$ matrix $\mathbf{x}$
+\item exception: exc$:=$
+\subitem - Type Error: If the vector is not a numpy array of reals.
+\end{itemize}
+vecNorm(vec1):
+\begin{itemize}
+\item transition: Takes a vector ($\mathbb{R}^{n}$ this is checked) and computes the euclidean norm. A scalar value is returned ($\mathbb{R}$).
+\item output: outputs a real scalar
+\\
+out $:=$ scalar $x$
+\item exception: exc$:=$
+\subitem -  Dimension Error: If a matrix and not a vector (can generalize to matrices however for our purposes we only need vector norms)
+\subitem - Type Error: If the vectors are not numpy arrays of reals.
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+None
+
+\section{MIS of Gradient Calculator}\label{Module:GradCalc}
+
+\subsection{Module}
+gradcalc
+
+\subsection{Uses}
+\begin{itemize}
+    \item Vector Math Module
+    \item Parameter Configuration Module
+\end{itemize}
+\begin{itemize}
+    \item Hardware hiding module
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+gradCalc & $\vv{x}_{t} \in \mathbb{R}^d$ & $\nabla f(\vv{x}_t) \in \mathbb{R}^d$ & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+\subsubsection{State Variables}
+None
+
+\subsubsection{Environment Variables}
+
+None
+
+\subsubsection{Assumptions}
+None
+\subsubsection{Access Routine Semantics}
+
+\noindent gradCalc(x\_t):
+\begin{itemize}
+\item transition: Using the Parameters Configuration module we obtain the constants A\_mat and b\_vec. Since we know for our quadratic function the analytic form of the gradient is as follows: $2 \times \text{A\_mat} + \text{b\_vec}$. We simply use the Vector Math module to compute the prior equation, and output a result.  
+\item output: curr\_grad which is a numpy vector $\in \mathbb{R}^d$ 
+\item exception: - 
+\end{itemize}
+
+
+\subsubsection{Local Functions}
+
+None
+
+
+\section{MIS of Optimization Solver}\label{Module:Optimizer}
+
+\subsection{Module}
+optimizer
+
+
+\subsection{Uses}
+\begin{itemize}
+    \item Vector Math 
+    \item Parameter Configuration
+    \item Step size Calculator 
+    \item Gradient Calculator 
+    \item Search Direction Calculator
+\end{itemize}
+\begin{itemize}
+    \item Hardware hiding module
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+BFGS & $\vv{x}_{0} \in \mathbb{R}^d$, $\mathbf{H}_{0} \in \mathbb{R}^{d \times d}...$  & $\vv{x}_{t} \in \mathbb{R}^d$ & - \\
+DFP & $\vv{x}_{0} \in \mathbb{R}^d$, $\mathbf{B}_{0} \in \mathbb{R}^{d \times d}...$  & $\vv{x}_{t} \in \mathbb{R}^d$ & - \\
+FRCG & $\vv{x}_{0} \in \mathbb{R}^{d}...$  & $\vv{x}_{t} \in \mathbb{R}^d$ & - \\
+
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+\subsubsection{State Variables}
+$\alpha_t, (\text{alpha\_t}): $ The current step size, although this can be customized as input to be one value from the input parameter $s$, the algorithms are designed to calculate a step size at each iteration. This will be computed via the step-size calculator module for the case where an exact line search is needed.
+\\
+$\vv{s}_t, (\text{s\_t}): $ The current search direction, this will be computed via the search direction calculator module for each specific algorithm.
+\\
+$x_{t}, (\text{x\_t}):$ The current iteration's solution, this value is initialized with $x_0$. Notably this value resides in $ \in \mathbb{R}^d$
+\\
+$H_{t}, (\text{H\_t)}:$ Approximate Hessian (only relevant for BFGS) which resides in $ \in \mathbb{R}^{d \times d}$ this is changed for each iteration to each algorithm's specification. This is a matrix that takes values in $\in \mathbb{R}^{d \times d}$
+\\
+$B_{t}, (\text{H\_t)}:$ Approximate inverse Hessian (only relevant for DFP) which resides in $ \in \mathbb{R}^{d \times d}$ this is changed for each iteration to each algorithm's specification. This is a matrix that takes values in $\in \mathbb{R}^{d \times d}$
+\\
+$\text{curr}_{s} (\text{t})$: The current step we are on. This is a common state variable for iterative algorithms' we will monitor how long we are running our algorithm for and this helps us decide if we need to terminate the execution of the program. This is a natural number $\in \mathbb{N}$.
+
+\subsubsection{Environment Variables}
+None
+\subsubsection{Assumptions}
+
+Assume that the user inputs appropriate choices for the function. That is that the matrix $\mathbf{A}$ is positive-semidefinite (PSD). If this assumption is violated then we cannot guarantee an appropriate solution (see SRS). 
+\subsubsection{Access Routine Semantics}
+
+
+BFGS($\mathbf{A}, \vv{b}, c, \vv{x}_{0}, \mathbf{H}_{0}, s = $ STEP\_SIZE, $\text{max}_s =$ MAX\_STEP, $\epsilon=\text{MIN\_ERR}$):
+\\
+or alternatively:
+\\
+BFGS(A\_mat, b\_vec, c, x\_0, H\_0, step\_size = STEP\_SIZE, max\_s = MAX\_STEP, min\_err= MIN\_ERR)
+\begin{itemize}
+\item transition: takes the function in its parametrized form of $\mathbf{A},\vv{b},c$, initial solution and Hessian. It also takes a step size $s$ (set to -1 to indicate calculating step size otherwise the custom stepsize will be used), and max number of steps (also having a default limit to ensure feasibility). From this the algorithm utilizes the step-size calculator function for BFGS to computes the step size (if needed). It will also utilize the search direction function to compute the necessary search direction. From this, the algorithm updates the approximate solution and iteratively continues with this process until termination. The output verification module also checks if the current solution is below the error threshold, if so; terminate the program and return the value. Otherwise update the approximate Hessian via the local function computeHessianBFGS() and continue with the procedure.
+\item output: $\vv{x}_t$: the output is the final solution at the end of the algorithm's runtime. The solution is a vector of reals: $\mathbb{R}^d$.  
+\item exception: Runtime Error (current step number is greater than max) 
+\end{itemize}
+DFP($\mathbf{A}, \vv{b}, c, \vv{x}_{0}, \mathbf{B}_{0}, s = $ STEP\_SIZE, $\text{max}_s =$ MAX\_STEP, $\epsilon=\text{MIN\_ERR}$):
+\\
+or alternatively:
+\\
+DFP(A\_mat, b\_vec, c, x\_0, B\_0, step\_size = STEP\_SIZE, max\_s = MAX\_STEP, min\_err= MIN\_ERR)
+\begin{itemize}
+\item transition: takes the function in its parameterized form of $\mathbf{A},\vv{b},c$, initial solution and inverse Hessian. It also takes a step size $s$ (set to -1 to indicate calculating step size otherwise the custom step size will be used), and max number of steps (also having a default limit to ensure feasibility). From this the algorithm utilizes the step-size calculator function for DFP to computes the step size (if needed). It will also utilize the search direction function to compute the necessary search direction. From this, the algorithm updates the approximate solution and iteratively continues with this process until termination. The output verification module also checks if the current solution is below the error threshold, if so; terminate the program and return the value. Otherwise update the inverse Hessian via the local function computeInvHessianDFP() and continue with the procedure.
+\item output: $\vv{x}_t$: the output is the final solution at the end of the algorithm's runtime. The solution is a vector of reals: $\mathbb{R}^d$.
+\item exception: Runtime Error (current step number is greater than max)
+\end{itemize}
+FRCG($\mathbf{A}, \vv{b}, c, \vv{x}_{0}, s = $ STEP\_SIZE, $\text{max}_s =$ MAX\_STEP, $\epsilon=\text{MIN\_ERR}$):
+\\
+or alternatively:
+\\
+FRCG(A\_mat, b\_vec, c, x\_0, step\_size = STEP\_SIZE, max\_s = MAX\_STEP, min\_err= MIN\_ERR)
+\begin{itemize}
+\begin{itemize}
+\item transition: takes the function in its parametrized form of $\mathbf{A},\vv{b},c$, and initial solution. It also takes a step size $s$ (set to -1 to indicate calculating step size otherwise the custom stepsize will be used), and max number of steps (also having a default limit to ensure feasibility). From this the algorithm utilizes the step-size calculator function for FRCG to computes the step size (if needed). It will also utilize the search direction function to compute the necessary search direction. From this, the algorithm updates the approximate solution and iteratively continues with this process until termination. The output verification module also checks if the current solution is below the error threshold, if so; terminate the program and return the value.
+\item output: $\vv{x}_t$: the output is the final solution at the end of the algorithm's runtime. The solution is a vector of reals: $\mathbb{R}^d$.
+\item exception: Runtime Error (current step number is greater than max)
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Local Functions}
+
+\noindent computeHessianBFGS(H\_t, x\_new, x\_t, s\_t, alpha\_t):
+\\
+
+\noindent -Given the inputs, the following equation is utilized to update the approximate of the Hessian:
+\begin{align*}
+    \mathbf{H}_{t+1} = \mathbf{H}_{t} + \frac{\vv{y}_{t}\vv{y}_{t}^{T}}{\vv{y}_{t}^{T}\vv{p}_{t}} - \frac{ \mathbf{H}_{t}\vv{p}_{t}\vv{p}_{t}^{T}\mathbf{H}_{t}^{T} }{ \vv{p}_{t}^{T}\mathbf{H}_{t}\vv{p}_{t} }
+\end{align*}
+where 
+\begin{align*}
+    \vv{y}_{t} = \nabla f(\vv{x}_{t+1}) - \nabla f(\vv{x}_{t})
+\end{align*}
+and where 
+\begin{align*}
+    \vv{p}_t = \alpha_{t}\vv{s}_t
+\end{align*}
+So we first compute the intermediary variable y\_t which is the difference between the gradient of x\_new and gradient of x\_t. We then use this variable to update the value of the current approximation of the Hessian (H\_new) according to the above equations. The Vector Math and Gradient Calculator modules are used heavily. Returns the new approximation of the Hessian; H\_new, which replaces the value of the state variable H\_t.
+\\
+
+\noindent computeInvHessianDFP(B\_t, x\_new, x\_t, s\_t, alpha\_t):
+\\
+
+\noindent -Given the inputs, the following equation is utilized to update the approximate of the inverse Hessian:
+\begin{align*}
+    \mathbf{B}_{t+1} = \mathbf{B}_{t} + \frac{\vv{p}_{t}\vv{p}_{t}^{T}}{\vv{p}_{t}^{T}\vv{y}_{t}} - \frac{ \mathbf{B}_{t}\vv{y}_{t}\vv{y}_{t}^{T}\mathbf{B}_{t}^{T} }{ \vv{y}_{t}^{T}\mathbf{B}_{t}\vv{y}_{t} }
+\end{align*}
+where 
+\begin{align*}
+    \vv{y}_{t} = \nabla f(\vv{x}_{t+1}) - \nabla f(\vv{x}_{t})
+\end{align*}
+and where 
+\begin{align*}
+    \vv{p}_t = \alpha_{t}\vv{s}_t
+\end{align*}
+So we first compute the intermediary variable y\_t which is the difference between the gradient of x\_new and gradient of x\_t. We also compute the intermediate variable of p\_t which is just the current step size times the current search direction: p\_t $=$ alpha\_t $\times$ s\_t. We then use this variable to update the value of the current approximation of the inverse Hessian (B\_new) according to the above equations. The Vector Math and Gradient Calculator modules are used heavily. Returns the new approximation of the inverse Hessian; B\_new, which replaces the value of the state variable B\_t.
+
+\section{MIS of Step-Size Calculator}\label{Module:StepSizeCalc}
+
+\subsection{Module}
+stepsizecalc
+
+
+\subsection{Uses}
+\begin{itemize}
+    \item Vector Math Module
+    \item Parameter Configuration Module
+    \item Hardware Hiding Module
+\end{itemize}
+
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+exactStep & $\vv{x}_{t}, \vv{s_t} \in \mathbb{R}^{d}$ & $\alpha_t \in \mathbb{R}$ & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+\subsubsection{State Variables}
+None
+\subsubsection{Environment Variables}
+
+None
+
+\subsubsection{Assumptions}
+
+The function class we are minimizing is quadratic. Also the matrix $\mathbf{A}$ is PSD. The first assumption is quite critical because we compute the gradient analytically assuming the function is quadratic, then we only need to input the current vector and the parameters that define the quadratic ($\mathbf{A}, \vv{b}$) to obtain a value of the gradient at a point. 
+
+\subsubsection{Access Routine Semantics}
+
+\noindent exactStep(x\_t, s\_t):
+\begin{itemize}
+\item transition: compute the gradient using the Gradient Calculator module. A\_mat is obtained from the Parameters Configuration module. Now the exact step can be computed easily via matrix operations; for minimizing a quadratic function via line search returns a step size in the analytic form:
+\begin{align*}
+    \alpha_t = -\frac{\nabla f(\vv{x}_t)^{T}\vv{s}_{t}}{\vv{s}^{T}_{t}\mathbf{A}\vv{s}_t}
+\end{align*}
+\item output: $\alpha_t$(alpha\_t) a positive real number 
+\item exception: none
+\end{itemize}
+
+\subsubsection{Local Functions}
+None
+
+\section{MIS of Search Direction Calculator} \label{Module:SearchDir}
+
+\subsection{Module}
+searchdir
+
+\subsection{Uses}
+\begin{itemize}
+    \item Vector Math Module
+    \item Parameter Configuration Module
+    \item Gradient Calculator Module
+    \item Hardware Hiding Module
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+dirBFGS & $\mathbf{H}_t \in \mathbb{R}^{n \times n}, \vv{x}_{t} \in \mathbb{R}^{n}$ & $\vv{s}_{t} \in \mathbb{R}^d$ & - \\
+dirDFP  & $\mathbf{H}_t \in \mathbb{R}^{n \times n}, \vv{x}_{t} \in \mathbb{R}^{n}  $ & $\vv{s}_{t} \in \mathbb{R}^d$ & - \\
+dirFRCG & $\vv{x}_{t},\vv{x}_{t-1}, \vv{s}_{t-1} \in \mathbb{R}^d$ & $\vv{s}_{t} \in \mathbb{R}^d$ & - \\
+& $t \in \mathbb{N}$ & & \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+\subsubsection{State Variables}
+None
+
+\subsubsection{Environment Variables}
+None
+\subsubsection{Assumptions}
+See SRS and Module \ref{Module:StepSizeCalc}'s assumptions.
+
+\subsubsection{Access Routine Semantics}
+
+\noindent dirBFGS(H\_t, x\_t):
+\begin{itemize}
+\item transition: The search direction is computed by solving the following equation: $\mathbf{H}_t \vv{s}_{t} = -\nabla f(\vv{x}_{t})$. Which is solved by $\vv{s}_{t} = -\mathbf{H}^{-1}_{t}\nabla f(\vv{x}_{t})$. So we need to invert the current Hessian approximation and matrix multiply the negative of the current gradient.
+\item output: s\_t; the current iteration's search direction. This is a numpy array of reals; a vector $\in \mathbb{R}^d$. 
+\item exception: -
+\end{itemize}
+
+\noindent dirDFP(B\_t, x\_t):
+\begin{itemize}
+\item transition: The search direction is computed by solving the following equation: $\vv{s}_{t} = -\mathbf{B}_t \nabla f(\vv{x}_{t})$. So we need the current inverse Hessian approximation and matrix multiply the negative of the current gradient.
+\item output: s\_t; the current iteration's search direction. This is a numpy array of reals; a vector $\in \mathbb{R}^d$. 
+\item exception: - 
+\end{itemize}
+
+\noindent dirFRCG(x\_t, x\_prev, s\_prev,t):
+\begin{itemize}
+\item transition: First check if we are on the first step via variable t. If we are we obtain the step size for the first step size via the Step Size Calculator module, and compute the current solution x\_t (the passed variable would be irrelevant) by taking the previous iteration (x\_prev) and subtracting the gradient of the previous iteration times the first step size. For all other computations we compute the direction as follows:  compute the negative of the gradient of the current solution (x\_t) and add beta\_t times the previous search direction: $\vv{s}_{t} = - \nabla f(x_t) + \beta_t \vv{s}_{t-1}$. Where beta\_t is computed as the dot product of the gradient of the current iteration with itself divided by the dot product of the gradient of the previous iteration with itself:
+\begin{align*}
+    \beta_t = \frac{(\nabla f(x_{t}))^{T}(\nabla f(x_{t})) }{(\nabla f(x_{t-1}))^{T}(\nabla f(x_{t-1}))}
+\end{align*}
+\item output: s\_t; the current iteration's search direction. This is a numpy array of reals; a vector $\in \mathbb{R}^d$. 
+\item exception: - 
+\end{itemize}
+
+\subsubsection{Local Functions}
+\noindent betaFR(x\_t, x\_prev):
+\begin{itemize}
+\item transition: As stated prior beta\_t is computed as the dot product of the gradient of the current iteration with itself divided by the dot product of the gradient of the previous iteration with itself:
+\begin{align*}
+    \beta_t = \frac{(\nabla f(x_{t}))^{T}(\nabla f(x_{t})) }{(\nabla f(x_{t-1}))^{T}(\nabla f(x_{t-1}))}
+\end{align*}
+\item output: beta\_t; the current iteration's beta. This is a scalar; $\in \mathbb{R}$. 
+\item exception: - 
+\end{itemize}
+
+\section{MIS of Output Verification} \label{Module:OutputVerify}
+
+\subsection{Module}
+
+
+
+\subsection{Uses}
+\begin{itemize}
+    \item Vector Math Module
+    \item Parameter Configuration Module
+    \item Gradient Calculator
+\end{itemize}
+\begin{itemize}
+    \item Hardware hiding module
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+outputVerify & $x_{t} \in \mathbb{R}^d$ & valid\_sol $\in \mathbb{B}$  & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+\subsubsection{State Variables}
+None
+
+\subsubsection{Environment Variables}
+
+None
+
+\subsubsection{Assumptions}
+
+None
+
+\subsubsection{Access Routine Semantics}
+
+\noindent outputVerify(x\_t):
+\begin{itemize}
+\item transition: Takes the current value of the solution, uses the Gradient Calculator module to obtain a value of curr\_grad. From this value they compute the norm via the Vector Math module. This function then compares this value to the error threshold from the Parameters Configuration module. If it is less than the threshold valid\_sol is set to TRUE. This causes the program to return to the Optimization Solver module where the program will terminate and return the solution as an acceptable solution.
+\item output: 
+\\
+valid\_sol: If the current solution is below the error threshold then this variable takes the value TRUE. It is set to FALSE by default (it is a Boolean variable).
+\item exception: None 
+\end{itemize}
+
+
+\subsubsection{Local Functions}
+
+None
+
+
+\iffalse 
+%begin template
+\section{MIS of Template} \label{Module:OutputParam}
+
+\subsection{Module}
+Main
+
+
+\subsection{Uses}
+\begin{itemize}
+    \item Output Verification 
+    \item Vector Math Module
+    \item Specification Parameters Module
+    \item Hardware Hiding Module
+    \item Optimization Solver
+\end{itemize}
+\begin{itemize}
+    \item Hardware hiding module
+\end{itemize}
+
+\subsection{Syntax}
+
+\subsubsection{Exported Constants}
+None
+\subsubsection{Exported Access Programs}
+
+\begin{center}
+\begin{tabular}{p{2cm} p{4cm} p{4cm} p{2cm}}
+\hline
+\textbf{Name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions} \\
+\hline
+Main & - & - & - \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Semantics}
+\subsubsection{State Variables}
+param $:=$ sequence of (
+\\
+$s: \mathbb{R},$ step size
+\\
 
 \wss{Not all modules will have state variables.  State variables give the module
   a memory.}
@@ -227,17 +1045,39 @@ The following table is taken directly from the Module Guide document for this pr
   explicitly.  Even if they are implemented, they are not exported; they only
   have local scope.}
 
+  %end template 
+\fi 
+
+% temp 
+\iffalse 
+gradient & vectors/matrices of dimensions $\mathbb{R}^{n\times n}, \mathbb{R}^n, \mathbb{R}^n$ & vector of type $\mathbb{R}^{n}$ & Dimension Error \& Type Error \\
+
+
+gradient():
+\begin{itemize}
+\item transition: Takes a square matrix($\mathbb{R}^{n\times n}$ this is checked) and a vector ($\mathbb{R}^{n}$ this is checked) computes the gradient. Since we know the gradient of the general function we are solving for (quadratic) determining the gradient at the point only requires these two parameters ($\mathbf{A}$ and $\vv{b}$) and an input vector. The gradient is computed and a vector of size $\mathbb{R}^n$ is returned.
+\item output: outputs a vector with the same dimension as the input vector.
+\\
+out $:=$ vector $\vv{x}$
+\item exception: exc$:=$
+\subitem -  Dimension Error: If matrices/vectors are not in the appropriate dimension
+\subitem - Type Error: If one or any of the matrix or vectors are not numpy arrays of reals.
+\end{itemize}
+
+
+
+\fi 
+
 \newpage
 
 \bibliographystyle {plainnat}
-\bibliography {../../../refs/References}
+\bibliography{references}
 
 \newpage
 
 \section{Appendix} \label{Appendix}
 
-\wss{Extra information if required}
-
+N/A
 \section{Reflection}
 
 The information in this section will be used to evaluate the team members on the
@@ -245,11 +1085,19 @@ graduate attribute of Problem Analysis and Design.  Please answer the following 
 
 \begin{enumerate}
   \item What are the limitations of your solution?  Put another way, given
-  unlimited resources, what could you do to make the project better? (LO\_ProbSolutions)
+  unlimited resources, what could you do to make the project better?
+  (LO\_ProbSolutions)
+  \\
+
+  The dimensionality of the problem is quite limited due to computational demands. This could be expanded with greater resources. Another factor tied to this would be an expanded upper limit on the number of maximum steps. We could theoretically let our algorithms run for a lot more iterations. Similarly, for min\_error which if it was lower we could get better approximations of the final solutions.
+    
   \item Give a brief overview of other design solutions you considered.  What
   are the benefits and tradeoffs of those other designs compared with the chosen
   design?  From all the potential options, why did you select the documented design?
   (LO\_Explores)
+  \\
+
+  Another design solution considered was having a singular entry point into the library via a function called `optimize' which would specify the optimizer of choice via a string variable. This string variable would be called \textit{func\_name} and take values of `BFGS', `DFP', and `FRCG.' Another module would be needed called Input (perhaps a different name would be better?) which would then allow a Control Module to design and control the flow for the particular optimizer. We chose not to go in this direction as this was not consistent with the way most libraries of functions are designed. This also led to further problems such as having a singular input to encompass all the optimizers which have varying inputs. For instance, B\_0 is not an input in BFGS or FRCG and similarly H\_0 is not an input in DFP or FRCG etc. This would in turn require further safeguards to worry about cases where incorrect inputs are made; ie `BFGS' is \textit{func\_name} but H\_0 is not provided but B\_0 is. This would require further design decisions that would increase the complexity of the project needlessly. 
 \end{enumerate}
 
 

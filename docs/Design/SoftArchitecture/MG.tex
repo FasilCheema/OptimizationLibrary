@@ -16,8 +16,8 @@
     urlcolor=blue
 }
 
-\input{../../Comments}
-\input{../../Common}
+\input{Comments}
+\input{Common}
 
 \newcounter{acnum}
 \newcommand{\actheacnum}{AC\theacnum}
@@ -33,9 +33,9 @@
 
 \begin{document}
 
-\title{Module Guide for \progname{}} 
-\author{\authname}
-\date{\today}
+\title{Module Guide for OptLib} 
+\author{Fasil Cheema}
+\date{March 18, 2024}
 
 \maketitle
 
@@ -46,8 +46,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+March 19, 2024 & 1.0 & Initial Upload\\
 \bottomrule
 \end{tabularx}
 
@@ -74,7 +73,6 @@ This section records information for easy reference.
   SRS & Software Requirements Specification\\
   \progname & Explanation of program name\\
   UC & Unlikely Change \\
-  \wss{etc.} & \wss{...}\\
   \bottomrule
 \end{tabular}\\
 
@@ -157,11 +155,9 @@ adapted here is called design for
 change.
 
 \begin{description}
-\item[\refstepcounter{acnum} \actheacnum \label{acHardware}:] The specific
-  hardware on which the software is running.
-\item[\refstepcounter{acnum} \actheacnum \label{acInput}:] The format of the
-  initial input data.
-\item ...
+\item[\refstepcounter{acnum} \actheacnum \label{acNumSteps}:] The maximum number of steps we upper bound our program by may change. This is largely due to computational demands and how feasible these computations are with respect to this parameter.
+\item[\refstepcounter{acnum} \actheacnum \label{acMinError}:] The minimum threshold of error of our program may change. This is largely due to computational demands and how feasible these computations are with respect to this parameter.
+\item[\refstepcounter{acnum} \actheacnum \label{acMaxDim}:] The maximum dimension of we upper bound our program by may change. This is largely due to computational demands and how feasible these computations are with respect to this parameter.
 \end{description}
 
 \subsection{Unlikely Changes} \label{SecUchange}
@@ -174,9 +170,7 @@ will potentially need to be modified. Hence, it is not intended that these
 decisions will be changed.
 
 \begin{description}
-\item[\refstepcounter{ucnum} \uctheucnum \label{ucIO}:] Input/Output devices
-  (Input: File and/or Keyboard, Output: File, Memory, and/or Screen).
-\item ...
+\item[\refstepcounter{ucnum} \uctheucnum \label{ucNumFunc}:] The number of optimizers in our library will likely not change.
 \end{description}
 
 \section{Module Hierarchy} \label{SecMH}
@@ -187,8 +181,16 @@ below, which are leaves in the hierarchy tree, are the modules that will
 actually be implemented.
 
 \begin{description}
-\item [\refstepcounter{mnum} \mthemnum \label{mHH}:] Hardware-Hiding Module
-\item ...
+\item [\refstepcounter{mnum} \mthemnum \label{moduleHH}:] Hardware-Hiding Module
+\item [\refstepcounter{mnum} \mthemnum \label{moduleMain}:] Main Module
+\item [\refstepcounter{mnum} \mthemnum \label{moduleParamConfig}:] Parameter Configuration Module
+\item [\refstepcounter{mnum} \mthemnum \label{moduleVecMath}:] Vector Math Module
+\item [\refstepcounter{mnum} \mthemnum \label{moduleGradCalc}:] Gradient Calculator Module
+\item [\refstepcounter{mnum} \mthemnum \label{moduleStepSize}:] Step Size Calculator Module
+\item [\refstepcounter{mnum} \mthemnum \label{moduleSearchDir}:] Search Direction Calculator Module
+\item [\refstepcounter{mnum} \mthemnum \label{moduleInputVerify}:] Input Verify Module
+\item [\refstepcounter{mnum} \mthemnum \label{moduleOutputVerify}:] Output Verify Module
+\item [\refstepcounter{mnum} \mthemnum \label{moduleOptimizer}:] Optimization Solver Module
 \end{description}
 
 
@@ -202,19 +204,19 @@ actually be implemented.
 {Hardware-Hiding Module} & ~ \\
 \midrule
 
-\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module} & ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\
-& ?\\ 
-& ?\\
+\multirow{7}{0.3\textwidth}{Behaviour-Hiding Module}
+& Main Module\\
+& Parameter Configuration\\
+& Vector Math Module\\
+& Gradient Calculation\\
+& Step-Size Calculator\\
+& Search Direction Calculator\\
 \midrule
 
-\multirow{3}{0.3\textwidth}{Software Decision Module} & {?}\\
-& ?\\
-& ?\\
+\multirow{3}{0.3\textwidth}{Software Decision Module}
+& Input Verification\\
+& Output Verification\\
+& Optimization Solver\\
 \bottomrule
 
 \end{tabular}
@@ -244,14 +246,14 @@ module. The \emph{Services} field specifies \emph{what} the module will do
 without documenting \emph{how} to do it. For each module, a suggestion for the
 implementing software is given under the \emph{Implemented By} title. If the
 entry is \emph{OS}, this means that the module is provided by the operating
-system or by standard programming language libraries.  \emph{\progname{}} means the
-module will be implemented by the \progname{} software.
+system or by standard programming language libraries.  \emph{OptLib} means the
+module will be implemented by the OptLib software.
 
 Only the leaf modules in the hierarchy have to be implemented. If a dash
 (\emph{--}) is shown, this means that the module is not a leaf and will not have
 to be implemented.
 
-\subsection{Hardware Hiding Modules (\mref{mHH})}
+\subsection{Hardware Hiding Modules (\mref{moduleHH})}
 
 \begin{description}
 \item[Secrets:]The data structure and algorithm used to implement the virtual
@@ -274,19 +276,59 @@ to be implemented.
 \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Input Format Module (\mref{mInput})}
+\subsubsection{Main Module (\mref{moduleMain})}
 
 \begin{description}
-\item[Secrets:]The format and structure of the input data.
-\item[Services:]Converts the input data into the data structure used by the
-  input parameters module.
-\item[Implemented By:] [Your Program Name Here]
-\item[Type of Module:] [Record, Library, Abstract Object, or Abstract Data Type]
-  [Information to include for leaf modules in the decomposition by secrets tree.]
+\item[Secrets:]The implementation details and all relevant functions.
+\item[Services:]Controls the order of execution of the program, contains all submodules, functions etc and acts as the entry point for a user to access the library.
+\item[Implemented By:] OptLib
+\item[Type of Module:] Library
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Parameter Configuration Module (\mref{moduleParamConfig})}
 
+\begin{description}
+\item[Secrets:]The relevant parameters for our specific call request and contains important constants.
+\item[Services:]Is populated with all relevant constants and defining variables for our specific minimization problem.
+\item[Implemented By:] OptLib
+\item[Type of Module:] Record
+\end{description}
+
+\subsubsection{Vector Math Module (\mref{moduleVecMath})}
+
+\begin{description}
+\item[Secrets:]The functions required to operate on vectors.
+\item[Services:]Conducts computations on vectors/matrices that other modules will require.
+\item[Implemented By:] OptLib
+\item[Type of Module:] Library
+\end{description}
+
+\subsubsection{Gradient Calculator Module (\mref{moduleGradCalc})}
+
+\begin{description}
+\item[Secrets:]The gradient calculation for our specific function minimization problem.
+\item[Services:]Given our specific function to minimize and given a vector it computes the gradient. Since we have an analytic form of the gradient for our specific problem, this computation is taken care of in this module.
+\item[Implemented By:] OptLib
+\item[Type of Module:] Utility (Abstract Data Type)
+\end{description}
+
+\subsubsection{Step-Size Calculator Module (\mref{moduleStepSize})}
+
+\begin{description}
+\item[Secrets:]The step-size calculation for our optimizer. The same calculation is done for all minimizers in the library.
+\item[Services:]We know the analytic form for the step size if we are doing an exact line search. This calculation is then done given a search direction, and a potential solution. It returns the step size given these parameters.
+\item[Implemented By:] OptLib
+\item[Type of Module:] Utility (Abstract Data Type)
+\end{description}
+
+\subsubsection{Search-Direction Calculator Module (\mref{moduleSearchDir})}
+
+\begin{description}
+\item[Secrets:]The search direction calculation for our optimizer. This contains the search direction functions for each specific optimizer. 
+\item[Services:]The module will utilize an appropriate function to compute the search direction for a specific optimizer. The search direction is returned to then be used in other modules.
+\item[Implemented By:] OptLib 
+\item[Type of Module:] Utility (Abstract Data Type))
+\end{description}
 
 \subsection{Software Decision Module}
 
@@ -301,7 +343,32 @@ to be implemented.
 \item[Implemented By:] --
 \end{description}
 
-\subsubsection{Etc.}
+\subsubsection{Input Verification Module (\mref{moduleInputVerify})}
+
+\begin{description}
+\item[Secrets:]The validity of the input data.
+\item[Services:]Verifies if the input parameters are correct. If parameters are not in the appropriate format this module's purpose is to detect such issues.
+\item[Implemented By:] OptLib
+\item[Type of Module:] Abstract Data Type
+\end{description}
+
+\subsubsection{Output Verification Module (\mref{moduleOutputVerify})}
+
+\begin{description}
+\item[Secrets:]The validity of the potential solution.
+\item[Services:]Verifies if the potential solution is below the error threshold. If the current solution is, this module detects it, and acts as a flag to terminate the program early as an acceptable solution has been found.
+\item[Implemented By:] OptLib
+\item[Type of Module:] Abstract Data Type
+\end{description}
+
+\subsubsection{Optimization Solver Module (\mref{moduleOptimizer})}
+
+\begin{description}
+\item[Secrets:]The optimizer to be used to minimize the function.
+\item[Services:]The function called by an external program resides in this module. This module contains the optimizers in the library we have designed. Given inputs the optimizer then utilizes the other modules to solve for the minimum of the specific function.
+\item[Implemented By:] OptLib
+\item[Type of Module:] Library
+\end{description}
 
 \section{Traceability Matrix} \label{SecTM}
 
@@ -316,17 +383,11 @@ requirements and between the modules and the anticipated changes.
 \toprule
 \textbf{Req.} & \textbf{Modules}\\
 \midrule
-R1 & \mref{mHH}, \mref{mInput}, \mref{mParams}, \mref{mControl}\\
-R2 & \mref{mInput}, \mref{mParams}\\
-R3 & \mref{mVerify}\\
-R4 & \mref{mOutput}, \mref{mControl}\\
-R5 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R6 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}, \mref{mSeqDS}, \mref{mSolver}, \mref{mPlot}\\
-R7 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R8 & \mref{mOutput}, \mref{mEnergy}, \mref{mControl}, \mref{mSeqDS}, \mref{mPlot}\\
-R9 & \mref{mVerifyOut}\\
-R10 & \mref{mOutput}, \mref{mODEs}, \mref{mControl}\\
-R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
+R1 & \mref{moduleParamConfig}, \mref{moduleInputVerify} \\
+R2 & \mref{moduleParamConfig}, \mref{moduleGradCalc}, \mref{moduleStepSize}, \mref{moduleSearchDir}, \mref{moduleInputVerify}\\
+R3 & \mref{moduleVecMath}, \mref{moduleGradCalc}, \mref{moduleStepSize}, \mref{moduleSearchDir}, \mref{moduleOutputVerify},  \mref{moduleOptimizer}\\
+R4 & \mref{moduleInputVerify}, \mref{moduleOutputVerify}\\
+R5 & \mref{moduleOutputVerify}, \mref{moduleOptimizer}\\
 \bottomrule
 \end{tabular}
 \caption{Trace Between Requirements and Modules}
@@ -339,18 +400,10 @@ R11 & \mref{mOutput}, \mref{mODEs}, \mref{mEnergy}, \mref{mControl}\\
 \toprule
 \textbf{AC} & \textbf{Modules}\\
 \midrule
-\acref{acHardware} & \mref{mHH}\\
-\acref{acInput} & \mref{mInput}\\
-\acref{acParams} & \mref{mParams}\\
-\acref{acVerify} & \mref{mVerify}\\
-\acref{acOutput} & \mref{mOutput}\\
-\acref{acVerifyOut} & \mref{mVerifyOut}\\
-\acref{acODEs} & \mref{mODEs}\\
-\acref{acEnergy} & \mref{mEnergy}\\
-\acref{acControl} & \mref{mControl}\\
-\acref{acSeqDS} & \mref{mSeqDS}\\
-\acref{acSolver} & \mref{mSolver}\\
-\acref{acPlot} & \mref{mPlot}\\
+\acref{acNumSteps} & \mref{moduleParamConfig} \mref{moduleInputVerify} \mref{moduleOptimizer} \\
+\acref{acMinError} & \mref{moduleParamConfig} \mref{moduleInputVerify} 
+\mref{moduleOutputVerify} \mref{moduleOptimizer}\\
+\acref{acMaxDim} & \mref{moduleParamConfig} \mref{moduleInputVerify}\\
 \bottomrule
 \end{tabular}
 \caption{Trace Between Anticipated Changes and Modules}
@@ -380,7 +433,7 @@ because they use modules from the lower levels.
 %\section*{References}
 
 \section{User Interfaces}
-
+N/A (a library of functions, programs will call functions in the library)
 \wss{Design of user interface for software and hardware.  Attach an appendix if
 needed. Drawings, Sketches, Figma}
 
@@ -395,7 +448,7 @@ needed. Drawings, Sketches, Figma}
 \wss{You can point to GitHub if this information is included there}
 
 \bibliographystyle {plainnat}
-\bibliography{../../../refs/References}
+\bibliography{references}
 
 \newpage{}
 
