@@ -4,6 +4,7 @@
 
 import numpy as np 
 from paramconfig import paramconfig
+import constants
 
 class InputVerifier:
     '''
@@ -14,7 +15,8 @@ class InputVerifier:
         self.dim     = 0
         self.err_msg = "Input Error! The following reasons caused an error: "
 
-        self.MAX_DIM = 6
+        self.MAX_DIM = constants.MAX_DIM
+        self.ERR_THRESH = constants.ERR_THRESH
 
     def inputverify(self, A_mat, b_vec, c, x_0, H_0, B_0, step_size, max_s, min_err):
         
@@ -141,6 +143,10 @@ class InputVerifier:
                 self.valid   = False
                 err_str22 = "\n min error should be between 0 and 1 (exclusive) "
                 self.err_msg += err_str22
+            elif min_err <= self.ERR_THRESH:
+                self.valid = False
+                err_str23 = "\n min error is below valid threshold "
+                self.err_msg += err_str23
 
         
         return self.valid, self.err_msg

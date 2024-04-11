@@ -2,13 +2,10 @@
 #Purpose: This module should contain the relevant parameters to the library.
 #Date   : March 20, 2024
 
-
 class paramconfig:
+    
     def __init__(self,A_mat,b_vec,c,x_0,H_0,B_0,step_size,max_s,min_err):
-        self.MAX_DIM  = 6
-        self.MAX_STEP = 10000
-        self.MIN_ERR  = 0.005
-
+        
         self.A_mat = A_mat
         self.b_vec = b_vec
         self.c     = c 

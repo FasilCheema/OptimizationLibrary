@@ -8,37 +8,37 @@ import searchdir
 import gradcalc
 from inputverify import InputVerifier
 import numpy as np
-from stepsizecalc import stepsizeCalc
+from stepsizecalc import exactStep
+from abc import ABCMeta, abstractmethod
 
 
-class optimizer:
-
-    def __init__(self, alpha_t,s_t,x_t,H_t,B_t,t):
+class AbstractOptimizer(metaclass=ABCMeta):
+   
+    @abstractmethod
+    def update(self,alpha_t,s_t,x_t,Mat_t,t):
         self.alpha_t = alpha_t
         self.s_t     = s_t
         self.x_t     = x_t
-        self.H_t     = H_t
-        self.B_t     = B_t
+        self.Mat_t   = Mat_t
         self.t       = t
-
-    def update(self,alpha_t,s_t,x_t,H_t,B_t,t):
-        self.alpha_t = alpha_t
-        self.s_t     = s_t
-        self.x_t     = x_t
-        self.H_t     = H_t
-        self.B_t     = B_t
-        self.t       = t
-
-    def optimization_algo(self, A_mat, b_vec, c, x_0, H_0, B_0, step_size, max_s, min_err):
+    
+    @abstractmethod
+    def optimization_algo(self, A_mat, b_vec, c, x_0, Mat_0, step_size, max_s, min_err):
         '''
         Design Pattern: This is a design pattern common to the optimization algorithms in this 
         module. This function takes in parameters (mostly) common to all optimization algorithm 
         in this repository.  
         '''
-
+        
+        #The InputVerification and paramconfig record will hold relevant values. Depending on the method if a user chooses 
+        #   a Quasi-Newton method (DFP or BFGS) they need to compute either a Hessian or an inverse Hessian approximate. 
+        #   This line acts like a placeholder so the paramconfig record still has a value stored for the approximate method not used.
+        tmp_mat = np.ones(Mat_0.shape())
+        
+        
         #Verify the validity of the input paramters 
         validator = InputVerifier()
-        valid, err_msg = validator.inputverify(A_mat,b_vec,c,x_0,H_0,B_0,step_size,max_s,min_err)
+        valid, err_msg = validator.inputverify(A_mat,b_vec,c,x_0,Mat_0,tmp_mat,step_size,max_s,min_err)
 
         if not(valid is True):
             
@@ -48,17 +48,18 @@ class optimizer:
             #If the parameters are valid we instantiate and fill a paramconfig object, to hold our current
             #   parameter configuration. This object is used to easily pass around parameters to the rest of
             #   the code. 
-            parameters = paramconfig(A_mat,b_vec,c,x_0,H_0,B_0,step_size,max_s,min_err)
+            parameters = paramconfig(A_mat,b_vec,c,x_0,Mat_0,tmp_mat,step_size,max_s,min_err)
         
-            self.H_t = H_0
-            self.x_t = x_0
+            self.Mat_t = Mat_0
+            self.x_t   = x_0
+            self.t     = 0
 
             for i in range(max_s):
 
-                s_t = searchdir.diralg(self.H_t,self.x_t, parameters)
+                s_t = searchdir.diralg(self.Mat_t,self.x_t, parameters)
                 
                 if step_size != -1:
-                    step_size = stepsizeCalc(self.x_t,self.s_t,parameters)
+                    step_size = exactStep(self.x_t,self.s_t,parameters)
                 else: 
                     step_size == 1
 
@@ -70,18 +71,25 @@ class optimizer:
 
                 if grad <= min_err:
                     
-                    self.update(step_size,s_t,x_new,H_t,B_0,i)
+                    self.update(step_size,s_t,x_new,Mat_t,i)
 
                     return x_new
-                
-                H_t = self.computeApproxMatOptAlg(self.H_t,x_new,self.x_t,self.s_t,self.step_size)
-                self.update(step_size,s_t,x_new,H_t,B_0, i)
+               
+                Mat_new = self.computeApproxMat(self.Mat_t,x_new,self.x_t,self.s_t,self.alpha_t,parameters)
+                next_step = i + 1 
+                self.update(step_size,s_t,x_new,Mat_new, next_step)
 
             return x_new
     
-    def computeApproxMatOptAlg(self,Mat,x_new,x_t,s_t,alpha_t):
+    @abstractmethod
+    def computeApproxMat(self,Mat,x_new,x_t,s_t,alpha_t,parameters):
+        '''
+        Design Pattern: This is a design pattern common to the optimization algorithms in this 
+        module. This function computes an approximate Matrix (either the Hessian or inverse Hessian).
+        This function is common to the Quasi-Newton optimization methods (DFP and BFGS).  
+        '''
 
-        y_t = vecmath.vecAdd(vecmath.gradCalc(x_new), -vecmath.gradCalc(x_t)) 
+        y_t = vecmath.vecAdd(vecmath.gradCalc(x_new,parameters), -vecmath.gradCalc(x_t,parameters))
         p_t = alpha_t*s_t
 
         numerator1   = vecmath.vecProd(y_t,vecmath.vecT(y_t))
@@ -100,6 +108,16 @@ class optimizer:
         Mat_new = Mat + term1 - term2
 
         return Mat_new
+
+
+class optimizer:
+    def update(self,alpha_t,s_t,x_t,H_t,B_t,t):
+        self.alpha_t = alpha_t
+        self.s_t     = s_t
+        self.x_t     = x_t
+        self.H_t     = H_t
+        self.B_t     = B_t
+        self.t       = t
 
     def BFGS(self,A_mat,b_vec,c,x_0,H_0,step_size = -1, max_s = 10000, min_err = 0.005):
 
@@ -132,7 +150,7 @@ class optimizer:
 
                 if grad <= min_err:
                     
-                    self.update(step_size,s_t,x_t,H_t,B_t)
+                    self.update(step_size,s_t,x_t,H_t,B_t,i)
 
                     return x_new
                 
