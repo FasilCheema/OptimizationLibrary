@@ -14,7 +14,7 @@ class InputVerifier:
         self.valid   = True
         self.dim     = 0
         self.err_msg = "Input Error! The following reasons caused an error: "
-
+    
         self.MAX_DIM = constants.MAX_DIM
         self.ERR_THRESH = constants.ERR_THRESH
 
