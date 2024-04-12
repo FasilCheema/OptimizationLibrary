@@ -3,7 +3,7 @@
 #Date   : March 20, 2024
 
 import vecmath
-from gradcalc import gradCalc
+from gradcalc import compute_gradient
 
 def diralg(Mat, x_t, parameters):
     '''
@@ -14,7 +14,7 @@ def diralg(Mat, x_t, parameters):
     '''
 
     inv_Mat  = vecmath.inverse(Mat)
-    gradient = gradCalc(x_t,parameters)
+    gradient = compute_gradient(x_t,parameters)
 
     s_t = - vecmath.vecProd(inv_Mat,gradient)
 
@@ -23,8 +23,8 @@ def diralg(Mat, x_t, parameters):
 def betaFR(x_t, x_prev,parameters):
 
     
-    curr_gradient = gradCalc(x_t, parameters)
-    prev_gradient = gradCalc(x_prev, parameters)
+    curr_gradient = compute_gradient(x_t, parameters)
+    prev_gradient = compute_gradient(x_prev, parameters)
 
     curr_grad_t = vecmath.vecT(curr_gradient)
     prev_grad_t = vecmath.vecT(prev_gradient)
@@ -40,7 +40,7 @@ def betaFR(x_t, x_prev,parameters):
 def dirBFGS(H_t, x_t, parameters):
 
     inv_H     = vecmath.inverse(H_t)
-    gradient  = gradCalc(x_t, parameters)
+    gradient  = compute_gradient(x_t, parameters)
 
     s_t = - vecmath.vecProd(inv_H, gradient)
 
@@ -48,7 +48,7 @@ def dirBFGS(H_t, x_t, parameters):
 
 def dirDFP(B_t, x_t, parameters):
 
-    gradient = gradCalc(x_t,parameters)
+    gradient = compute_gradient(x_t,parameters)
 
     s_t = - vecmath.vecProd(B_t,gradient)
 
@@ -59,7 +59,7 @@ def dirFRCG(x_t, x_prev, s_prev, parameters):
     beta_t   = betaFR(x_t,x_prev,parameters)
     tmp_vec  = beta_t*s_prev
 
-    neg_gradient = -gradCalc(x_t,parameters)
+    neg_gradient = -compute_gradient(x_t,parameters)
 
 
     s_t = vecmath.vecAdd(neg_gradient, tmp_vec)

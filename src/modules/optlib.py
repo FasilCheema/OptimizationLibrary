@@ -153,34 +153,31 @@ class optimizer:
             
             parameters = paramconfig(A_mat,b_vec,c,x_0,H_0,B_0,step_size,max_s,min_err)
 
+            Hessian = H_0
+            curr_sol = x_0
+
             for i in range(max_s):
 
-                if i == 0:
-                    self.H_t = H_0
-                    self.x_t = x_0
-
+                search_dir = searchdir.dirBFGS(Hessian,curr_sol, parameters)
+                
                 if step_size != -1:
-                    step_size = exactStep(self.x_t,self.s_t,parameters)
+                    step_size = exactStep(curr_sol,search_dir,parameters)
                 else:
-                    step_size == 1
+                    step_size = 1
                 
-                s_t = searchdir.dirBFGS(self.H_t,self.x_t, parameters)
+                self.update(step_size,search_dir,curr_sol,Hessian,B_0,i)
 
-                x_new = vecmath.vecAdd(self.x_t,step_size*s_t)
+                curr_sol = vecmath.vecAdd(curr_sol,step_size*search_dir)
 
-                grad = gradcalc.compute_gradient(x_new,parameters)
+                grad = gradcalc.compute_gradient(curr_sol,parameters)
                 
-                H_t = self.computeHessianBFGS(x_new,parameters)
+                Hessian = self.computeHessianBFGS(curr_sol,parameters)
 
                 if grad <= min_err:
                     
-                    next_step = i + 1 
-                    self.update(step_size,s_t,x_new,H_t,B_0,next_step)
-
-                    return x_new
+                    return curr_sol
                 
-                next_step = i + 1
-                self.update(step_size,s_t,x_new,H_t,B_0,next_step)
+            return curr_sol
                 
 
     def DFP(self,A_mat,b_vec,c,x_0,B_0,step_size = -1, max_s = 10000, min_err = 0.005):
@@ -189,7 +186,6 @@ class optimizer:
         #The InputVerification and paramconfig record will hold relevant values. Depending on the method if a user chooses 
         #   a Quasi-Newton method (DFP or BFGS) they need to compute either a Hessian or an inverse Hessian approximate. 
         #   This line acts like a placeholder so the paramconfig record still has a value stored for the approximate method not used.
-        B_0 = np.zeros(A_mat.shape)
 
         #Verify the validity of the input parameters 
         validator = InputVerifier()
@@ -206,39 +202,80 @@ class optimizer:
             #   the project. 
             
             parameters = paramconfig(A_mat,b_vec,c,x_0,H_0,B_0,step_size,max_s,min_err)
+            
+            InvHessian = B_0
+            curr_sol = x_0
 
             for i in range(max_s):
 
-                if i == 0:
-                    self.H_t = H_0
-                    self.x_t = x_0
-
+                search_dir = searchdir.dirDFP(InvHessian,curr_sol, parameters)
+                
                 if step_size != -1:
-                    step_size = exactStep(self.x_t,self.s_t,parameters)
+                    step_size = exactStep(curr_sol,search_dir,parameters)
                 else:
-                    step_size == 1
+                    step_size = 1
                 
-                s_t = searchdir.dirBFGS(self.H_t,self.x_t, parameters)
-
-                x_new = vecmath.vecAdd(self.x_t,step_size*s_t)
-
-                grad = gradcalc.compute_gradient(x_new,parameters)
+                self.update(step_size,search_dir,curr_sol,H_0,InvHessian,i)
                 
-                B_t = self.computeInvHessianDFP(x_new,parameters)
-
+                curr_sol = vecmath.vecAdd(curr_sol,step_size*search_dir)   
+                InvHessian = self.computeInvHessianDFP(curr_sol,parameters)
+                
+                grad = gradcalc.compute_gradient(curr_sol,parameters)
+                
                 if grad <= min_err:
                     
-                    next_step = i + 1 
-                    self.update(step_size,s_t,x_new,H_0,B_t,next_step)
-
-                    return x_new
+                    return curr_sol
                 
-                next_step = i + 1
-                self.update(step_size,s_t,x_new,H_0,B_t,next_step)
+            return curr_sol
 
     def FRCG(self,A_mat,b_vec,c,x_0,step_size = -1, max_s = 10000, min_err = 0.005):
+        
         H_0 = np.zeros(A_mat.shape)
         B_0 = np.zeros(A_mat.shape)
+
+        #Verify the validity of the input parameters 
+        validator = InputVerifier()
+        valid, err_msg = validator.inputverify(A_mat,b_vec,c,x_0,H_0,B_0,step_size,max_s,min_err)
+        
+        if not(valid is True):
+
+            print(err_msg)
+        
+        else:
+            
+            #If the parameters are valid we instantiate and fill a paramconfig object, to hold our current
+            #   parameter configuration. This object is used to easily pass around parameters to the rest of
+            #   the project. 
+            parameters = paramconfig(A_mat,b_vec,c,x_0,H_0,B_0,step_size,max_s,min_err)
+
+            curr_sol = x_0
+            
+            for i in range(max_s):
+
+                if i == 0:
+                    
+                    search_dir = -gradcalc.compute_gradient(curr_sol, parameters)
+
+                else:
+                
+                    search_dir = searchdir.dirFRCG(curr_sol,self.x_t,search_dir,parameters)
+
+                if step_size != -1:
+                    step_size = exactStep(curr_sol,search_dir,parameters)
+                else:
+                    step_size = 1
+
+                self.update(step_size,search_dir,curr_sol,H_0,B_0,i)
+                    
+                curr_sol = vecmath.vecAdd(curr_sol,step_size*search_dir)
+
+                grad = gradcalc.compute_gradient(curr_sol,parameters)
+                
+                if grad <= min_err:
+                    
+                    return curr_sol
+                
+            return curr_sol
 
 
     def computeHessianBFGS(self,x_new,parameters):
