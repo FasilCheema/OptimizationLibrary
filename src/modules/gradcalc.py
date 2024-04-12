@@ -4,7 +4,7 @@
 
 from vecmath import vecAdd, vecProd
 
-def gradCalc(x_t, parameters):
+def compute_gradient(x_t, parameters):
 
     A_mat = parameters.A_mat
     b_vec = parameters.b_vec
