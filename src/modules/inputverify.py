@@ -46,19 +46,22 @@ class InputVerifier:
             self.err_msg += err_str4
         else:  
         
-            if b_vec.ndim != 1:
+            if (b_vec.shape[0] != 1) or (b_vec.ndim != 2):
                 self.valid   = False
-                err_str5 = "\n b_vec is not a vector "
+                err_str5 = "\n b_vec is not a row vector "
                 self.err_msg += err_str5
             
-            if self.dim != b_vec.shape[0]:
+            if self.dim != b_vec.shape[1]:
                 self.valid   = False
                 err_str6 = "\n b_vec does not have a valid shape "
                 self.err_msg += err_str6
-            
-        if not(isinstance(c,float)):
+
+        #Note that in this check we do not use the isinstance() method
+        #   This is due to python's strange behaviour where it accepts
+        #   bools as integers. Using type we avoid this.  
+        if not((type(c) is float) or (type(c) is int)):
             self.valid   = False
-            err_str7 = "\n c should be a scalar real (float) "
+            err_str7 = "\n c should be a scalar real (float or int) "
             self.err_msg += err_str7
         
         #checks if x_0 is a numpy array
@@ -67,9 +70,9 @@ class InputVerifier:
             err_str8 = "\n x_0 is not a valid numpy array "
             self.err_msg += err_str8
         else: 
-            if x_0.ndim != 1:
+            if (x_0.ndim != 2) and (x_0.shape[1] == 1):
                 self.valid   = False
-                err_str9 = "\n x_0 is not a vector "
+                err_str9 = "\n x_0 is not a column vector "
                 self.err_msg += err_str9
             
             if self.dim != x_0.shape[0]:
@@ -113,9 +116,12 @@ class InputVerifier:
                 err_str16 = "\n B_0 is not a square matrix "
                 self.err_msg += err_str16
 
-        if not(isinstance(step_size,float)):
+        #Note that in this check we do not use the isinstance() method
+        #   This is due to python's strange behaviour where it accepts
+        #   bools as integers. Using type we avoid this.  
+        if not((type(step_size) is float) or (type(step_size) is int)):
             self.valid   = False
-            err_str17 = "\n stepsize should be a scalar real (float) "
+            err_str17 = "\n stepsize should be a scalar real (float or int) "
             self.err_msg += err_str17
         elif (step_size != -1) and (step_size <= 0):
             self.valid = False
@@ -143,7 +149,7 @@ class InputVerifier:
                 self.valid   = False
                 err_str22 = "\n min error should be between 0 and 1 (exclusive) "
                 self.err_msg += err_str22
-            elif min_err <= self.ERR_THRESH:
+            elif not(min_err >= self.ERR_THRESH):
                 self.valid = False
                 err_str23 = "\n min error is below valid threshold "
                 self.err_msg += err_str23

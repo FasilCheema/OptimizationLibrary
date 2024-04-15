@@ -13,7 +13,7 @@ def vecAdd(mat1, mat2):
 
 def vecProd(mat1, mat2):
 
-    prod = np.multiply(mat1, mat2)
+    prod = np.matmul(mat1, mat2)
 
     return prod
 
@@ -25,9 +25,13 @@ def inverse(mat1):
 
 def vecDot(vec1, vec2):
 
-    dotprod = np.dot(vec1,vec2)
+    vec1T   = vecT(vec1)
 
-    return dotprod
+    dotprod_arr = np.matmul(vec1T,vec2)
+
+    dot_prod = dotprod_arr.item() 
+
+    return dot_prod
 
 def vecT(mat1):
 

@@ -69,8 +69,6 @@ class AbstractOptimizer(metaclass=ABCMeta):
                 
                 if step_size != -1:
                     step_size = exactStep(self.x_t,self.s_t,parameters)
-                else: 
-                    step_size == 1
 
                 self.alpha_t = step_size
                 
@@ -155,32 +153,35 @@ class optimizer:
 
             Hessian = H_0
             curr_sol = x_0
+            
+            if step_size == -1:
+                step_size_flag = True
 
             for i in range(max_s):
 
                 search_dir = searchdir.dirBFGS(Hessian,curr_sol, parameters)
                 
-                if step_size != -1:
+                if step_size_flag:
                     step_size = exactStep(curr_sol,search_dir,parameters)
-                else:
-                    step_size = 1
                 
                 self.update(step_size,search_dir,curr_sol,Hessian,B_0,i)
 
                 curr_sol = vecmath.vecAdd(curr_sol,step_size*search_dir)
-
-                grad = gradcalc.compute_gradient(curr_sol,parameters)
                 
                 Hessian = self.computeHessianBFGS(curr_sol,parameters)
 
-                if grad <= min_err:
+                grad = gradcalc.compute_gradient(curr_sol,parameters)
+                
+                grad_norm = vecmath.vecNorm(grad) 
+                
+                if grad_norm  <= min_err:
                     
                     return curr_sol
                 
             return curr_sol
                 
 
-    def DFP(self,A_mat,b_vec,c,x_0,B_0,step_size = -1, max_s = 10000, min_err = 0.005):
+    def DFP(self,A_mat,b_vec,c,x_0,B_0,step_size = -1, max_s = constants.MAX_STEP, min_err = constants.ERR_THRESH):
 
         H_0 = np.zeros(A_mat.shape)
         #The InputVerification and paramconfig record will hold relevant values. Depending on the method if a user chooses 
@@ -205,15 +206,16 @@ class optimizer:
             
             InvHessian = B_0
             curr_sol = x_0
+            
+            if step_size == -1:
+                step_size_flag = True
 
             for i in range(max_s):
 
                 search_dir = searchdir.dirDFP(InvHessian,curr_sol, parameters)
                 
-                if step_size != -1:
+                if step_size_flag:
                     step_size = exactStep(curr_sol,search_dir,parameters)
-                else:
-                    step_size = 1
                 
                 self.update(step_size,search_dir,curr_sol,H_0,InvHessian,i)
                 
@@ -222,13 +224,15 @@ class optimizer:
                 
                 grad = gradcalc.compute_gradient(curr_sol,parameters)
                 
-                if grad <= min_err:
+                grad_norm = vecmath.vecNorm(grad) 
+                
+                if grad_norm  <= min_err:
                     
                     return curr_sol
                 
             return curr_sol
-
-    def FRCG(self,A_mat,b_vec,c,x_0,step_size = -1, max_s = 10000, min_err = 0.005):
+                
+    def FRCG(self,A_mat,b_vec,c,x_0,step_size = -1, max_s = constants.MAX_STEP, min_err = constants.ERR_THRESH):
         
         H_0 = np.zeros(A_mat.shape)
         B_0 = np.zeros(A_mat.shape)
@@ -249,29 +253,31 @@ class optimizer:
             parameters = paramconfig(A_mat,b_vec,c,x_0,H_0,B_0,step_size,max_s,min_err)
 
             curr_sol = x_0
-            
+
+            #Use exact step 
+            if step_size == -1:
+                step_size_flag = True
+
             for i in range(max_s):
 
                 if i == 0:
-                    
                     search_dir = -gradcalc.compute_gradient(curr_sol, parameters)
-
                 else:
-                
-                    search_dir = searchdir.dirFRCG(curr_sol,self.x_t,search_dir,parameters)
-
-                if step_size != -1:
+                    search_dir = searchdir.dirFRCG(curr_sol,self.x_t,self.s_t,parameters)
+                    
+                if step_size_flag:
                     step_size = exactStep(curr_sol,search_dir,parameters)
-                else:
-                    step_size = 1
 
                 self.update(step_size,search_dir,curr_sol,H_0,B_0,i)
                     
-                curr_sol = vecmath.vecAdd(curr_sol,step_size*search_dir)
+                curr_sol = vecmath.vecAdd(curr_sol,search_dir*step_size)
 
                 grad = gradcalc.compute_gradient(curr_sol,parameters)
+
+                grad_norm = vecmath.vecNorm(grad)
                 
-                if grad <= min_err:
+                
+                if grad_norm  <= min_err:
                     
                     return curr_sol
                 

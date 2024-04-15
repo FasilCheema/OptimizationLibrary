@@ -26,12 +26,11 @@ def betaFR(x_t, x_prev,parameters):
     curr_gradient = compute_gradient(x_t, parameters)
     prev_gradient = compute_gradient(x_prev, parameters)
 
-    curr_grad_t = vecmath.vecT(curr_gradient)
-    prev_grad_t = vecmath.vecT(prev_gradient)
+    numerator   = vecmath.vecNorm(curr_gradient)
+    numerator   = numerator**2
 
-    numerator   = vecmath.vecProd(curr_grad_t,curr_gradient)
-
-    denominator = vecmath.vecProd(prev_grad_t,prev_gradient)
+    denominator = vecmath.vecNorm(prev_gradient)
+    denominator = denominator**2
 
     beta_t = numerator/denominator
 
