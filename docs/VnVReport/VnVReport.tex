@@ -1,5 +1,6 @@
 \documentclass[12pt, titlepage]{article}
 
+
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
@@ -10,10 +11,13 @@
     linkcolor=red,
     urlcolor=blue
 }
+% code package inserted by me: Fasil
+\usepackage{listings}
+
 \usepackage[round]{natbib}
 
-\input{../Comments}
-\input{../Common}
+\input{Comments}
+\input{Common}
 
 \begin{document}
 
@@ -30,8 +34,8 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+April 15, 2024 & 1.0 & Initial Upload\\
+
 \bottomrule
 \end{tabularx}
 
@@ -45,6 +49,13 @@ Date 2 & 1.1 & Notes\\
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   T & Test\\
+  VnV & Verification and Validation \\
+  TC & Test Case\\
+  MG & Module Guide\\
+  MIS & Module Interface Specification\\
+  SRS & Software Requirements Specification\\
+  FR & Functional Requirement\\
+  NFR & Nonfunctional Requirement\\
   \bottomrule
 \end{tabular}\\
 
@@ -62,41 +73,437 @@ Date 2 & 1.1 & Notes\\
 
 \pagenumbering{arabic}
 
-This document ...
+This document provides a detailed summary of the VnV report. We execute and report the results of the tests that should satisfy the requirements in this document. Sections \ref{sec:FRE} and \ref{sec:NFRE} are the tests for the functional and non functional requirements respectively.
 
 \section{Functional Requirements Evaluation}
+In this section we conduct and report the tests for the functional requirements.
+\label{sec:FRE}
+\subsection{Dynamic Testing}
+This section conducts the tests in section 4.1 of the VnV plan.
+\subsubsection{Input Validation}
+Tables \ref{tbl_FR1T1} and \ref{tbl_FR1T2} are tests for FR1 in the SRS and VnV plan \citep{SRS}. These tests are designed to validate when the input parameters are valid. After defining the inputs as follows we simply test using the following code: 
+\begin{lstlisting}
+    from inputverify import InputVerifier
+    
+    validator = InputVerifier()
+    valid, err_msg =  validator.inputverify(A_mat,b_vec,c,x_0,H_0,...
+    ...B_0,step_size,max_s,min_err)
+\end{lstlisting}
+if valid is True we pass the test. If valid is False the test is failed.
+\\
+
+This is the first test for FR1. We need to also evaluate this for the case where we have invalid inputs. See tables \ref{tbl_FR1T3}, \ref{tbl_FR1T4}.
+\\
+
+As expected for the valid inputs we pass all tests. For the invalid tests we fail all tests. The tests not only check for several things. As stated in the MG, MIS \citep{SRS} we have to ensure the types are consistent with the parameters. We also need to check for the shapes of the input matrices/vectors. Note that for example b\_vec is a 1 by d row vector whereas x\_0 is a d by 1 column vector. This is why these tests are critical for the success of the rest of the library in execution.
+
+\begin{table}[ht]
+\caption{FR 1 - Test 1- Valid Inputs} \label{tbl_FR1T1}
+\vspace*{2mm}
+\centering
+ \begin{tabular}{|c|c|c|} 
+ \hline
+\textbf{Parameter} & \textbf{Inputs} & \textbf{Result} \\ 
+\hline
+A\_mat&  A\_mat = np.array([[0.5,1],[1,1.5]])  &Pass \\
+ \hline
+ b\_vec& b\_vec = np.array([[-1,-2]]) & Pass \\ 
+ \hline
+ c& 0 & Pass \\ 
+ \hline
+ x\_0& x\_0 = np.array([[0],[1]]) & Pass\\ 
+ \hline
+ H\_0& H\_0 = np.array([[1,0],[0,1]]) & Pass \\ 
+ \hline
+ B\_0& B\_0 = np.array([[1,1],[1,1]]) & Pass \\ 
+ \hline
+ step\_size& 5 & Pass \\ 
+ \hline
+ max\_s& 10000 & Pass \\ 
+ \hline
+ min\_err& 0.05 & Pass \\ 
+ \hline
+ 
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\caption{FR 1- Test 2 Valid Inputs} \label{tbl_FR1T2}
+\vspace*{2mm}
+\centering
+ \begin{tabular}{|c|c|c|} 
+ \hline
+\textbf{Parameter} & \textbf{Inputs} & \textbf{Result} \\ 
+\hline
+A\_mat&  A\_mat = np.array([[0.5,1,3],[1,1.5,4],[1,0,1]])  &Pass \\
+ \hline
+ b\_vec& b\_vec = np.array([[-1,-2,-3]]) & Pass \\ 
+ \hline
+ c& 0 & Pass \\ 
+ \hline
+ x\_0& x\_0 = np.array([[0],[1],[2]]) & Pass\\ 
+ \hline
+ H\_0& H\_0 = np.array([[1,0,0],[0,1,0],[0,0,1]]) & Pass \\ 
+ \hline
+ B\_0& B\_0 = np.array([[1,1,1],[1,1,1],[1,1,1]]) & Pass \\ 
+ \hline
+ step\_size& 5 & Pass \\ 
+ \hline
+ max\_s& 10000 & Pass \\ 
+ \hline
+ min\_err& 0.05 & Pass \\ 
+ \hline
+ 
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\caption{FR 1- Test 3 Invalid Inputs} \label{tbl_FR1T3}
+\vspace*{2mm}
+\centering
+ \begin{tabular}{|c|c|c|} 
+ \hline
+\textbf{Parameter} & \textbf{Inputs} & \textbf{Result} \\ 
+\hline
+A\_mat&  A\_mat = np.array([[0.5,3],[1,4],[1,1]])  &Fail \\
+ \hline
+ b\_vec& b\_vec = np.array([-1,-2]) & Fail \\ 
+ \hline
+ c& 'hello' & Fail \\ 
+ \hline
+ x\_0& x\_0 = np.array([[0],[1],[2],[6]]) & Fail\\ 
+ \hline
+ H\_0& H\_0 = np.array([[1,0,0],[0,1,0],[0,0,1]]) & Fail \\ 
+ \hline
+ B\_0& B\_0 = np.array([[1,1],[1,1]]) & Fail \\ 
+ \hline
+ step\_size& True & Fail \\ 
+ \hline
+ max\_s& -10 & Fail \\ 
+ \hline
+ min\_err& 0.000001 & Fail \\ 
+ \hline
+ 
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\caption{FR 1- Test 4 Invalid Inputs} \label{tbl_FR1T4}
+\vspace*{2mm}
+\centering
+ \begin{tabular}{|c|c|c|} 
+ \hline
+\textbf{Parameter} & \textbf{Inputs} & \textbf{Result} \\ 
+\hline
+A\_mat&  A\_mat = np.array([0])  &Fail \\
+ \hline
+ b\_vec& b\_vec = np.array([[-1],[-2],[6]]) & Fail \\ 
+ \hline
+ c& np.ones((2,2)) & Fail \\ 
+ \hline
+ x\_0& x\_0 = np.array([[0],[1],[2]) & Fail\\ 
+ \hline
+ H\_0& H\_0 = np.array([[1,0],[0,0]]) & Fail \\ 
+ \hline
+ B\_0& B\_0 = np.array([[1,1,4],[1,1,5],[5,6,7]]) & Fail \\ 
+ \hline
+ step\_size& False & Fail \\ 
+ \hline
+ max\_s& 10e18 & Fail \\ 
+ \hline
+ min\_err& -5 & Fail \\ 
+ \hline
+ 
+\end{tabular}
+\end{table}
+
+
+
+
+
 
 \section{Nonfunctional Requirements Evaluation}
+\label{sec:NFRE}
+This section conducts the tests stated in section 4.2 of the VnV plan.
+\subsection{Dynamic Testing}
+\subsubsection{PSD Test Full Step}
 
-\subsection{Usability}
-		
-\subsection{Performance}
+For this test we simply do a full call to the library and utilize the Fletcher Reeves Conjugate Gradient Descent method and obtain a final value:
 
-\subsection{etc.}
-	
+\begin{lstlisting}
+    from optlib import optimizer
+    
+    optimizer = optimizer()
+    result =  optimizer.FRCG(A_mat,b_vec,c,x_0,...
+    ...,step_size,max_s,min_err)
+\end{lstlisting}
+The oracle final value according to the textbook should be 
+\begin{verbatim}
+    np.array([[9],[3]])
+\end{verbatim}
+We repeat the test for BFGS and DFP with the following function calls:
+
+\begin{lstlisting}
+    result = optimizer.DFP(A_mat,b_vec,c,x_0,B_0...
+    ...,step_size,max_s,min_err)
+    
+    result = optimizer.BFGS(A_mat,b_vec,c,x_0,H_0...
+    ...,step_size,max_s,min_err)
+\end{lstlisting}
+
+we obtain the following results: 
+\begin{verbatim}
+    np.array([[1.2222],[0.77778]])
+\end{verbatim}
+and 
+\begin{verbatim}
+    np.array([[1.166667],[0.833333]])
+\end{verbatim}
+for the BFGS and DFP algorithms respectively. This is within the error threshold of the desired result.
+\subsubsection{PSD Test Exact Step}
+when doing the test in table \ref{tbl_NFR1T6} with exact step we expect the following:
+\begin{verbatim}
+    np.array([[1],[1]])
+\end{verbatim}
+In all tests with each algorithm we obtain the desired result.
+
+The function calls 
+\begin{lstlisting}
+    result = optimizer.DFP(A_mat,b_vec,c,x_0...
+    ...,-1,max_s,min_err)
+    result = optimizer.DFP(A_mat,b_vec,c,x_0,B_0...
+    ...,-1,max_s,min_err)    
+    result = optimizer.BFGS(A_mat,b_vec,c,x_0,H_0...
+    ...,-1,max_s,min_err)
+\end{lstlisting}
+with the value of the parameters defined in the table \ref{tbl_NFR1T6}.
+
+\begin{table}[ht]
+\caption{NFR 1 - Test 5- PSD Matrix Full Step} \label{tbl_NFR1T5}
+\vspace*{2mm}
+\centering
+ \begin{tabular}{|c|c|} 
+ \hline
+\textbf{Parameter} & \textbf{Inputs} \\ 
+\hline
+A\_mat&  A\_mat = np.array([[1,0.5],[0.5,1.5]])   \\
+ \hline
+ b\_vec& b\_vec = np.array([[-3,-4]])  \\ 
+ \hline
+ c& 0  \\ 
+ \hline
+ x\_0& x\_0 = np.array([[0],[1]]) \\ 
+ \hline
+ H\_0& H\_0 = np.array([[1,0],[0,1]])\\ 
+ \hline
+ B\_0& B\_0 = np.array([[1,1],[1,1]]) \\ 
+ \hline
+ step\_size& 1  \\ 
+ \hline
+ max\_s& 10000 \\ 
+ \hline
+ min\_err& 0.05  \\ 
+ \hline
+ 
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\caption{NFR 1 - Test 6- PSD Matrix Exact Step} \label{tbl_NFR1T6}
+\vspace*{2mm}
+\centering
+ \begin{tabular}{|c|c|} 
+ \hline
+\textbf{Parameter} & \textbf{Inputs} \\ 
+\hline
+A\_mat&  A\_mat = np.array([[1,0.5],[0.5,1.5]])   \\
+ \hline
+ b\_vec& b\_vec = np.array([[-3,-4]])  \\ 
+ \hline
+ c& 0  \\ 
+ \hline
+ x\_0& x\_0 = np.array([[0],[1]]) \\ 
+ \hline
+ H\_0& H\_0 = np.array([[1,0],[0,1]])\\ 
+ \hline
+ B\_0& B\_0 = np.array([[1,1],[1,1]]) \\ 
+ \hline
+ step\_size& -1  \\ 
+ \hline
+ max\_s& 10000 \\ 
+ \hline
+ min\_err& 0.05  \\ 
+ \hline
+ 
+\end{tabular}
+\end{table}
+
+
+\subsubsection{Exact Step Calculation}
+
+We first enumerate the parameters configuration with the desired parameters. We do this in the following function call 
+
+\begin{lstlisting}
+    parameters = paramconfig(A_mat,b_vec,c,x_0,H_0,B_0,step_size,...
+    ...max_s,min_err)
+\end{lstlisting}
+The parameters are found in table \ref{tbl_NFR1T7}. We then compute the exact step with the following line:
+\begin{lstlisting}
+    s_0 = compute_gradient(x_0, parameters)
+    alpha_t = exactStep(x_0,s_0,parameters)
+\end{lstlisting}
+The expected result is $\frac{1}{2}$ and we achieve the desired result.
+\begin{table}[ht]
+\caption{NFR 1 - Test 7-Exact Step} \label{tbl_NFR1T7}
+\vspace*{2mm}
+\centering
+ \begin{tabular}{|c|c|} 
+ \hline
+\textbf{Parameter} & \textbf{Inputs} \\ 
+\hline
+A\_mat&  A\_mat = np.array([[1,0.5],[0.5,1.5]])   \\
+ \hline
+ b\_vec& b\_vec = np.array([[-3,-4]])  \\ 
+ \hline
+ c& 0  \\ 
+ \hline
+ x\_0& x\_0 = np.array([[0],[1]]) \\ 
+ \hline
+ H\_0& H\_0 = np.array([[1,0],[0,1]])\\ 
+ \hline
+ B\_0& B\_0 = np.array([[1,1],[1,1]]) \\ 
+ \hline
+ step\_size& -1  \\ 
+ \hline
+ max\_s& 10000 \\ 
+ \hline
+ min\_err& 0.05  \\ 
+ \hline
+ 
+\end{tabular}
+\end{table}
+
+
+\subsubsection{Gradient Calculation}
+
+Now we must check if the gradient of the quadratic form is accurate. We again utilize the textbook examples \citep{Boyd2006}. We call the compute\_gradient method from the gradcalc module:
+\begin{lstlisting}
+    s_0 = compute_gradient(x_0, parameters)
+\end{lstlisting} 
+In this example we use parameters specified in table \ref{tbl_NFR1T8}. We expect a value of 
+\begin{verbatim}
+    np.array([[-1],[2]]
+\end{verbatim}
+As in the textbook example we obtain this result.
+
+\begin{table}[ht]
+\caption{NFR 1 - Test 8-Gradient Calculation} \label{tbl_NFR1T8}
+\vspace*{2mm}
+\centering
+ \begin{tabular}{|c|c|} 
+ \hline
+\textbf{Parameter} & \textbf{Inputs} \\ 
+\hline
+A\_mat&  A\_mat = np.array([[1,0.5],[0.5,1.5]])   \\
+ \hline
+ b\_vec& b\_vec = np.array([[-3,-4]])  \\ 
+ \hline
+ c& 0  \\ 
+ \hline
+ x\_0& x\_0 = np.array([[0],[1]]) \\ 
+ \hline
+ H\_0& H\_0 = np.array([[1,0],[0,1]])\\ 
+ \hline
+ B\_0& B\_0 = np.array([[1,1],[1,1]]) \\ 
+ \hline
+ step\_size& -1  \\ 
+ \hline
+ max\_s& 10000 \\ 
+ \hline
+ min\_err& 0.05  \\ 
+ \hline
+ 
+\end{tabular}
+\end{table}
+
+
+\subsubsection{Search Direction Calculation}
+
+Now we must check if the search direction for each method is accurate. We again utilize the textbook examples \citep{Boyd2006}. We call the search direction methods for each algorithm:
+\begin{lstlisting}
+    s_t = searchdir.dirBFGS(H_0, x_t, parameters)
+    s_t = searchdir.dirDFP(B_0, x_t, parameters)
+    s_t = searchdir.dirFRCG(x_t, x_prev, s_prev parameters)
+\end{lstlisting} 
+In this example we use parameters specified in table \ref{tbl_NFR1T8}. We expect a value of 
+\begin{verbatim}
+    np.array([[2],[1]]
+\end{verbatim}
+for the DFP and the BFGS function calls. As for the FRCG function call we expect the following:
+\begin{verbatim}
+    np.array([[-1],[2]]
+\end{verbatim}
+As in the textbook example we obtain this result.
+
+\begin{table}[ht]
+\caption{NFR 1 - Test 9-Search Direction Calculation} 
+
+\label{tbl_NFR1T9}
+\vspace*{2mm}
+\centering
+ \begin{tabular}{|c|c|} 
+ \hline
+\textbf{Parameter} & \textbf{Inputs} \\ 
+\hline
+A\_mat&  A\_mat = np.array([[1,0.5],[0.5,1.5]])   \\
+ \hline
+ b\_vec& b\_vec = np.array([[-3,-4]])  \\ 
+ \hline
+ c& 0  \\ 
+ \hline
+ x\_t& x\_t = np.array([[0],[1]]) \\ 
+ \hline
+ H\_t& H\_t = np.array([[1,0],[0,1]])\\ 
+ \hline
+ B\_t& B\_t = np.array([[1,0],[0,1]]) \\ 
+ \hline
+ step\_size& -1  \\ 
+ \hline
+ max\_s& 10000 \\ 
+ \hline
+ min\_err& 0.05  \\ 
+ \hline
+ x\_prev& np.array([[0],[2]])  \\ 
+ \hline
+ s\_prev& np.array([[1],[-2]])  \\ 
+ \hline
+ 
+ 
+\end{tabular}
+\end{table}
+
+\subsection{Portability Tests}
+
+For this test we simply have to ensure NFR3 and NFR4 can be run. That is on a clean build can we access our library. We have a bash script in the src module to run the tests. We first have a clean build and ensure Python 3.9>= is installed and numpy 1.19>= is installed. The test worked on a clean build as long as we had these two dependencies installed. 
 \section{Comparison to Existing Implementation}	
 
-This section will not be appropriate for every project.
+Although scipy.optimize works well for desired results. The same results were also found for the tests with the textbook examples.
 
 \section{Unit Testing}
-
+Each module was tested and integrated into the project. First we tested the vecmath module with simple numpy arrays to ensure our vector math worked. Then for textbook examples we knew the asnwers to we tested the gradient calculation as in test 4.1.4, then tested exact step calculation as in 4.1.3, then tested search direction calculation as in 4.1.5. We also tested the ParamConfig and InputVerify modules separately on the command line as well as imports of each package before integrating everything together. Finally tested the whole function calls as in 4.1.1 and 4.1.2.
 \section{Changes Due to Testing}
 
-\wss{This section should highlight how feedback from the users and from 
-the supervisor (when one exists) shaped the final product.  In particular 
-the feedback from the Rev 0 demo to the supervisor (or to potential users) 
-should be highlighted.}
-
+Due to testing we had to carefully evaluate the shape of the numpy matrices. This was a careful decision as sometimes errors are not raised when incompatible matrices are multiplied. For this reason we changed all numpy arrays to be 2d arrays including column and row vectors. We also introduced specialized checks to make sure two vectors/matrices that are operated on are compatible.
 \section{Automated Testing}
-		
+Please see the shell script in the src file to see the tests conducted. The filename is FRTest1.sh
 \section{Trace to Requirements}
+Please refer to the SRS \citep{SRS} where traceability matrices can be found to the requirements. This is to have easy access and accountability to the changes in a large project.
 		
-\section{Trace to Modules}		
-
-\section{Code Coverage Metrics}
+\section{Trace to Modules}
+Please refer to the VnV plan, and MG/MIS documents \citep{SRS} where traceability matrices can be found to the respective modules. Again traceability for the tests to their respective modules ensures the validity of the final project.
 
 \bibliographystyle{plainnat}
-\bibliography{../../refs/References}
+\bibliography{References}
 
 \newpage{}
 \section*{Appendix --- Reflection}
@@ -113,6 +520,9 @@ graduate attribute of Reflection.  Please answer the following question:
   predict a feasible amount of effort and the right tasks needed to build the
   evidence that demonstrates the required quality?  (It is expected that most
   teams will have had to deviate from their original VnV Plan.)
+  \item We had many changes. We introduced many more tests to validate the individual modules. This included tests for the modules gradcalc, stepsizecalc, searchdir. The heavy emphasis on these tests is due to how they are heavily employed by the rest of the project. For this reason their validity is critical and more tests were needed to ensure correctness. 
 \end{enumerate}
+
+
 
 \end{document}

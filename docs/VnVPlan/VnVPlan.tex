@@ -12,8 +12,13 @@
 }
 \usepackage[round]{natbib}
 
-\input{../Comments}
-\input{../Common}
+%added by my Fasil
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{esvect}
+
+\input{Comments}
+\input{Common}
 
 \begin{document}
 
@@ -32,6 +37,7 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 Feb 19, 2024 & 1.0 & Initial Upload\\
+April 15, 2024 & 2.0 & Revised Version\\
 \bottomrule
 \end{tabularx}
 
@@ -78,6 +84,7 @@ accurate solutions to users' specification.
 
 
 \section{General Information}
+This section provides general information about the OptLib project.
 
 \subsection{Summary}
 The main project as discussed in the SRS \citep{SRS}, is to build a library of function optimizers. Specifically, we will
@@ -111,7 +118,7 @@ the textbooks from which we will have test cases for our library.
 
 \subsection{Relevant Documentation}
 The SRS, MG, and MIS are relevant documents to the VnV and will encompass the complete
-documentation for the Optimization Library. The SRS will contain a high-level explanation
+documentation for the Optimization Library \citep{SRS}. The SRS will contain a high-level explanation
 of the purpose, execution, and ideas behind this project. It will also define common themes
 between the different minimizers, and give a high-level walkthrough of function optimization. 
 This document is great for understanding certain design decisions and the purpose of each module.
@@ -119,12 +126,12 @@ The MG and MIS documents are important to illustrate the purpose of each module 
 interact with each other. These documents coupled with the VnV should allow a reader to go through 
 the whole software development process for this project.
 
-\citet{SRS}
+
 
 \section{Plan}
 In this section we provide a roadmap for our VnV. We wish to ensure the valdity of our work
 as such we will have a team reviewing our documentation ensuring our ideas are correct and in 
-line with the goals we seek to acheive \citep{SRS}. We will also introduce multiple tests that 
+line with the goals we seek to achieve \citep{SRS}. We will also introduce multiple tests that 
 are expansive enough to give confidence to future users that our library will do what we expect
 it to do. 
 
@@ -134,15 +141,17 @@ it to do.
   \item Author: Fasil Cheema
   \item Primary Reviewer: Morteza Mirzaei
   \item Secondary Reviewer: Dr Spencer Smith
-  \item Secondary Reviewer: Xinyu
+  \item Secondary Reviewer (SRS): Nada
+  \item Secondary Reviewer (VnV): Xinyu
+  \item Secondary Reviewer (MG/MIS): Valerie
 \end{itemize}
 
 \subsection{SRS Verification Plan}
 For the SRS verification plan a critical component will be taking criticisms from the 
 reviewers of the SRS. We will implement these criticisms into our updated document. 
-We will also have a checklist for the SRS to ensure we maintain the quality of the document. 
-This checklist will contain information to check over grammatical errors such as spelling mistakes,
-grammar etc. We will also ensure the checklist covers major concepts we should have in our SRS such 
+We will also maintain the quality of the document. 
+We will ensure that we check over grammatical errors such as spelling mistakes,
+grammar etc. We will also ensure we cover major concepts we should have in our SRS such 
 as proper documentation of the high level concept of the convex optimization.
 
 \subsection{Design Verification Plan}
@@ -150,7 +159,7 @@ as proper documentation of the high level concept of the convex optimization.
 
 This section introduces the plan for design verification. For this plan we will have 
 team members reviewing the high level calculations of the functions are correct.
-Domain experts are going to ensure these calculations are line with the original 
+Domain experts (primary reviewer Morteza) is going to ensure these calculations are line with the original 
 algorithms.
 
 \subsection{Verification and Validation Plan Verification Plan}
@@ -164,16 +173,16 @@ things such as spelling quality, to major high level tests that need to be verif
 
 The verification plan will be done by testing all the FR and
 NFR. The tests can be found in section 4. In addition, we will check over our code built
-in Python with a linter; PyLint. We will also have a code inspection and do rubber duck
+in Python with a linter; PyLint. This checks for incorrect code such as incorrect function calls. It can also check for code that ends up not being run or overridden. PyLint also ensures we keep pythonic code this is very good for code readability. We will also have a code inspection and do rubber duck
 testing. We will also conduct unit testing for modules 
-within the testing scope. Details for unit testing can be found in section 4.
+within the testing scope.  This testing will be done by the author by running the PyLint over the code. The author will ensure PyLint does not have any remaining issues (at least ones that cause issues). The author will ensure that PyLint makes sure there is no unused code, incorrect function calls, packages that are not imported, misspelled variables or functions, and any other mistakes in the code. Details for unit testing can be found in section 4.
 
 
 \subsection{Automated Testing and Verification Tools}
 In this section we will use several tools for automated testing. We will use the PyTest
  (Unittest) framework. This will allow multiple unit tests to be created and conducted.
  We will also employ PyLint as the linter of choice for ensuring we avoid unnecessary
- mistakes in the code. 
+ mistakes in the code. We will also have continuous integration where each module will be individually tested and validated. Then everything comes together and is tested.
 
 
 \subsection{Software Validation Plan}
@@ -186,6 +195,7 @@ minimizer we want including the ones presented in this doc (DFP,BFGS, FRCG).
 
 
 \section{System Test Description}
+This section will contain information on the system tests.
 
 \subsection{Tests for Functional Requirements}
 Functional Tests are given for this document in the SRS \citep{SRS}. We will have input 
@@ -194,15 +204,14 @@ We will have input tests for our functional requirements in \citep{SRS}.
 \subsubsection{Input}
 These tests will attempt to verify the following requirements also found in the SRS:
 \begin{itemize}
-  \item R1: The function and input vector are in the specified dimension which does not exceed
+  \item FR1: The function and input vector are in the specified dimension which does not exceed
   maximum defined dimension.
-  \item R2: The function will notify user of invalid data size (matrix shape mismatch)
+  \item FR2: The function can be represented in the quadratic form (ie valid parameters)
 \end{itemize}
 \subsubsection{Area of Testing1-Functional Requirements 1,2}
 FR 1 states that the matrices, and vectors in a function we seek to minimize should all be
 of appropriate size. That is, we should not have an error when attempting to conduct matrix 
-operations. Consequently, FR2 states that the function shall notify the user in the case where 
-this occurs; a size mismatch. This section will cover the area of testing related to these 2 FR. 
+operations. Consequently, FR2 states that the function shall be in the quadratic form. This means the input should be not only in the appropriate dimensionality but also be valid (the format must be a numpy array of 2 dimensions for vectors etc)  This section will cover the area of testing related to these 2 FR. 
 
 		
 \paragraph{Tests for FR1, FR2}
@@ -226,8 +235,35 @@ Output: Valid (True)
 Test Case Derivation: The size mismatch detector should not have an issue accepting these
 inputs. They should all pass. 
 					
-How test will be performed: Utilizing PyTest we will set the unit tests with the
-appropriate dimensions as specified above. 
+How test will be performed: Import the input verification module and check different values for the input parameters $\mathbf{A}$, $\vv{b}$, $c$, $\vv{x}_0$, $\mathbf{H}_0$, $\mathbf{B}_0$, step\_size, max\_s, min\_err.
+\\
+
+\noindent Check for valid $\mathbf{A}$ (2 dimensional matrix, a square matrix, a numpy array of floats, a numpy array).  
+\\
+
+\noindent Check for valid $\vv{b}$ (2 dimensional matrix, a row vector of appropriate shape, a numpy array of floats, a numpy array, should match dimensionality of $\mathbf{A}$).
+\\
+
+\noindent Check for valid $c$ (a valid float or integer).
+\\
+
+\noindent Check for valid $\vv{x}_0$ (a 2 dimensional matrix, a column vector of appropriate shape, a numpy array of floats, a numpy array, should match dimensionality of $\mathbf{A}$).
+\\
+
+\noindent Check for valid $\mathbf{H}_0$ (2 dimensional matrix, a square matrix, a numpy array of floats, a numpy array, appropriate dimensionality size matching $\mathbf{A}$).  
+\\
+
+\noindent Check for valid $\mathbf{B}_0$ (2 dimensional matrix, a square matrix, a numpy array of floats, a numpy array, appropriate dimensionality size matching $\mathbf{A}$).  
+\\
+
+\noindent Check for valid step\_size (a natural number also checks if below the max number of steps defined in \citep{SRS}).  
+\\
+
+\noindent Check for valid max\_s (a natural number also checks if below the max number of steps defined in \citep{SRS}).  
+\\
+
+\noindent Check for valid min\_err (between 0 and 1 and also above the min threshold defined in \citep{SRS}).  
+\\
 					
 \item{test-Problematic Input\\}
 
@@ -241,50 +277,74 @@ from dimensions 1 to our max dimension 6. We will have $\mathbf{\vec{b}}$
 also be a vector of 1s ranging from dimensions 1 to 6 as well. Finally we 
 will have the scalar $c$ be set to 1 for all the tests. For this test we 
 will not have the dimension of $\mathbf{A}$ and $\mathbf{\vec{b}}$ be the same
-but we will ensure they are always different. In other words we will try all 
-possible permutations of dimensions for both the matrix and vector where the
-dimensions of both are not equal.
+but we will ensure they are always different. In other words a test for if the matrices are not 2 dimensional matrices, the vectors are not column or row vectors specifically, c is not a scalar, or if matrix dimensions are inconcisent or if an input vector/matrix dimensions are not consistent.
 					
-Output: The size mismatch detector should detect a problem and raise an error.
+Output: The input verification module should detect a problem and raise an error.
 
 Test Case Derivation: This is an invalid size and further in the library there will be invalid 
 matrix operations (cannot do matrix multiplication for matrices of invalid sizes).
 
-How test will be performed: Utilizing PyTest we will set the unit tests with the
-appropriate dimensions as specified above.
+How test will be performed: Import the input verification module and check different values for the input parameters $\mathbf{A}$, $\vv{b}$, $c$, $\vv{x}_0$, $\mathbf{H}_0$, $\mathbf{B}_0$, step\_size, max\_s, min\_err.
+\\
+
+\noindent Check for invalid $\mathbf{A}$ (not 2 dimensional matrix, not a square matrix, not a numpy array of floats, not a numpy array).  
+\\
+
+\noindent Check for invalid $\vv{b}$ (not 2 dimensional matrix, not a row vector of appropriate shape, not a numpy array of floats, not a numpy array, should match dimensionality of $\mathbf{A}$).
+\\
+
+\noindent Check for invalid $c$ (not a valid float or integer).
+\\
+
+\noindent Check for invalid $\vv{x}_0$ (not 2 dimensional matrix, not a column vector of appropriate shape, not a numpy array of floats, not a numpy array, should match dimensionality of $\mathbf{A}$).
+\\
+
+\noindent Check for invalid $\mathbf{H}_0$ (not 2 dimensional matrix, not a square matrix, not a numpy array of floats, not a numpy array, not appropriate dimensionality size matching $\mathbf{A}$).  
+\\
+
+\noindent Check for invalid $\mathbf{B}_0$ (not 2 dimensional matrix, not a square matrix, not a numpy array of floats, not a numpy array, not appropriate dimensionality size matching $\mathbf{A}$).  
+\\
+
+\noindent Check for invalid step\_size (not a natural number also checks if above the max number of steps defined in \citep{SRS}).  
+\\
+
+\noindent Check for invalid max\_s (not a natural number also checks if above the max number of steps defined in \citep{SRS}).  
+\\
+
+\noindent Check for invalid min\_err (not between 0 and 1 and also below the min threshold defined in \citep{SRS}).  
+\\
 
 \end{enumerate}
 
 \subsection{Tests for Nonfunctional Requirements}
 The main test for the NFR will be related to accuracy. We will like to ensure that 
 our solution from the algorithm of choice is within the specified accuracy parameter 
-to the solution from the corresponding trusted solution.
+to the solution from the corresponding trusted solution. Wherever the `textbook' is referenced it is in reference to the following text \citep{Boyd2006}.
 
-\subsubsection{Area of Testing1}
+\subsubsection{Area of Testing NFR}
 		
-\paragraph{PSD Test 1 Full step }
+\paragraph{PSD Test 1 Exact step }
 
 \begin{enumerate}
 
 \item{PSD Test 1 Full step}\
 
-Type: Automatic
+Type: Manual 
 					
 Initial State: Pending
 					
-Input/Condition: $\mathbf{A}$ will be the identity matrix ranging from
-1 to 6 dimensions. $\mathbf{\vec{b}}$ will be a vector of 1s ranging from 1 
-6 dimensions along with $\mathbf{A}$. The scalar $c$ will be set to 1. We will
+Input/Condition: $\mathbf{A}$ will be set to a matrix specified.
+$\mathbf{\vec{b}}$ will be set to a vector specified. The scalar $c$ will be set to 0. We will
 use one of each algorithm (DFP, FRCG, and BFGS) with a full step (step size set to 1),
 an initial starting choice of the zero vector for the corresponding dimension. For the 
-quasi-newton methods we will have an initial Hessian, $H_{0}$, set tot be the identity 
+quasi-newton methods we will have an initial Hessian, $H_{0}$ or inverse Hessian, $B_{0}$ set to be the identity 
 matrix of the corresponding dimensionality. 
 					
-Output/Result: Relative Error of the two vectors (utilizing the norm of a vector). 
+Output/Result: Relative Error of the two vectors (utilizing the norm of a vector). The result will be from a textbook and will correspond to the known value. Final result is a Pass/Fail depending on if the norm value is below the err threshold.
 					
 How test will be performed: We will compute our respective algorithms then conduct the same 
 computation via our trusted source (scipy.minmize('bfgs')...) and then compute the relative 
-error. This is done by taking the norm of the difference of the two vectors over the norm of
+error. A trusted textbook will supply the example and also provide an expected answer \citep{Boyd2006}. We will compute the relative error. This is done by taking the norm of the difference of the two vectors over the norm of
 the `true' solution. If this is below the threshold we specify: accuracy parameter ($\epsilon_{acc} = 1\%$) 
 
 
@@ -294,47 +354,80 @@ Type: Automatic
 					
 Initial State: Pending
 					
-Input/Condition: $\mathbf{A}$ will be the identity matrix ranging from
-1 to 6 dimensions. $\mathbf{\vec{b}}$ will be a vector of 1s ranging from 1 
-6 dimensions along with $\mathbf{A}$. The scalar $c$ will be set to 1. We will
-use one of each algorithm (DFP, FRCG, and BFGS) with an adaptive step size,
+Input/Condition: $\mathbf{A}$ will be set to a matrix specified.
+$\mathbf{\vec{b}}$ will be set to a vector specified. The scalar $c$ will be set to 0. We will
+use one of each algorithm (DFP, FRCG, and BFGS) with a full step (step size set to 1),
 an initial starting choice of the zero vector for the corresponding dimension. For the 
-quasi-newton methods we will have an initial Hessian, $H_{0}$, set tot be the identity 
+quasi-newton methods we will have an initial Hessian, $H_{0}$ or inverse Hessian, $B_{0}$ set to be the identity 
 matrix of the corresponding dimensionality. In this case the adaptive step size requires 
 the individual algorithm to calculate the step size at each iteration. This is catered for 
 each individual algorithm and adds another degree of complexity.
 					
-Output/Result: Relative Error of the two vectors (utilizing the norm of a vector). 
+Output/Result: Relative Error of the two vectors (utilizing the norm of a vector). Final result is a Pass/Fail depending on if the norm value is below the err threshold.
 					
 How test will be performed: We will compute our respective algorithms then conduct the same 
-computation via our trusted source (scipy.minmize('bfgs')...) and then compute the relative 
-error. This is done by taking the norm of the difference of the two vectors over the norm of
+computation via our trusted source a textbook with the specific answer ( also scipy.minmize('bfgs')...) and then compute the relative 
+error \citep{Boyd2006}. This is done by taking the norm of the difference of the two vectors over the norm of
 the `true' solution. If this is below the threshold we specify: accuracy parameter ($\epsilon_{acc} = 1\%$) 
 
-\item{non-PSD Test 2 adaptive Step}\
+\item{non-PSD Test 3 adaptive Step}\
 
 Type: Automatic
 					
 Initial State: Pending
 					
-Input/Condition: $\mathbf{A}$ will be the identity matrix ranging from
-1 to 6 dimensions, except the first entry will be $-1000$. This makes the matrix non-PSD
-this is to violate the assumptions of our algorithms which require a PSD matrix to converge 
-to a global minima. $\mathbf{\vec{b}}$ will be a vector of 1s ranging from 1 
-6 dimensions along with $\mathbf{A}$. The scalar $c$ will be set to 1. We will
-use one of each algorithm (DFP, FRCG, and BFGS) with an adaptive step size,
+Input/Condition: $\mathbf{A}$ will be set to a matrix specified.
+$\mathbf{\vec{b}}$ will be set to a vector specified. The scalar $c$ will be set to 0. We will
+use one of each algorithm (DFP, FRCG, and BFGS) with a full step (step size set to 1),
 an initial starting choice of the zero vector for the corresponding dimension. For the 
-quasi-newton methods we will have an initial Hessian, $H_{0}$, set tot be the identity 
+quasi-newton methods we will have an initial Hessian, $H_{0}$ or inverse Hessian, $B_{0}$ set to be the identity 
 matrix of the corresponding dimensionality. In this case the adaptive step size requires 
 the individual algorithm to calculate the step size at each iteration. This is catered for 
 each individual algorithm and adds another degree of complexity.
 					
-Output/Result: Relative Error of the two vectors (utilizing the norm of a vector). 
+Output/Result: Relative Error of the two vectors (utilizing the norm of a vector). Final result is a Pass/Fail depending on if the norm value is below the err threshold.
 					
 How test will be performed: We will compute our respective algorithms then conduct the same 
-computation via our trusted source (scipy.minmize('bfgs')...) and then compute the relative 
-error. This is done by taking the norm of the difference of the two vectors over the norm of
+computation via our trusted source; a textbook example (also scipy.minmize('bfgs')...) and then compute the relative 
+error \citep{Boyd2006}. This is done by taking the norm of the difference of the two vectors over the norm of
 the `true' solution. If this is below the threshold we specify: accuracy parameter ($\epsilon_{acc} = 1\%$) 
+
+\item{Test 4 Exact Step}\
+
+Type: Automatic
+					
+Initial State: Pending
+					
+Input/Condition: Given the input parameters as specified from a textbook example we will compute the exact step for each algorithm \citep{Boyd2006}. The result will be compared to the result in the textbook; the oracle answer. 
+					
+Output/Result: Final result is a Pass/Fail depending on if the norm value is below the err threshold.
+
+How test will be performed: Compute the exact step for each algorithm and obtain a value. If the norm between this scalar value and the accepted answer is below the error threshold we make a decision.
+
+\item{Test 5 Gradient}\
+
+Type: Automatic
+					
+Initial State: Pending
+					
+Input/Condition: Given a vector and input parameters from a textbook example \citep{Boyd2006}.
+					
+Output/Result: Final result is a Pass/Fail depending on if the norm value is below the err threshold.
+
+How test will be performed: Compute the gradient for each initial vector and corresponding quadratic form (input parameters define this) and obtain a value. If the norm between this column vector and the accepted answer is below the error threshold we make a decision.
+
+
+\item{Test 6 Search Direction}\
+
+Type: Automatic
+					
+Initial State: Pending
+					
+Input/Condition: Given a vector and input parameters from a textbook example \citep{Boyd2006}.
+					
+Output/Result: Final result is a Pass/Fail depending on if the norm value is below the err threshold.
+
+How test will be performed: Compute the search for each initial vector and corresponding quadratic form (input parameters define this) and obtain a value. If the norm between this column vector and the accepted answer is below the error threshold we make a decision.
 
 \item{Portability Test 1- Linux\\}
 
@@ -346,7 +439,7 @@ Input:
 					
 Output: 
 					
-How test will be performed: Using the conda environment, on a fresh build of ubuntu 22.0
+How test will be performed: Ensuring we install the dependencies, on a fresh build of ubuntu 22.0
 we wish to first install the environment then run the library with the first test for the 
 NFR (PSD Test 1 Full step).
 
@@ -367,19 +460,20 @@ NFR (PSD Test 1 Full step).
 \end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements}
+Note that TF1 refers to Test Function Requirement 1, and TNF1 refers to Test Non Functional Requirement 1.
 \begin{table}[h!]
   \centering
   \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
   \hline        
-    & Test F1& Test F2 & Test NF1 & Test NF2& Test NF3 & Test NF4& Test NF5\\
+    & TF1& TF2 & TNF1 & TNF2& TNF3 & TNF4 & TNF5  & TNF6  & TNF7  & TNF8 \\
   \hline
-  FR1                    &X &X & & & & & \\ \hline
-  FR2        & & & & & & &  \\ \hline
-  NFR1      & & &X &X &X & &  \\ \hline
-  NFR2 & & & & & & &  \\ \hline
-  NFR3  & & & & & & &  \\ \hline
-  NFR4    & & & & & &X &X \\ \hline
-  NFR5     & & & & &  & &  \\ \hline
+  FR1                    &X &X & & & & & & & & \\ \hline
+  FR2        & & X & & & & & & & & \\ \hline
+  NFR1      & & &X &X &X &X &X &X & &  \\ \hline
+  NFR2 & & X & & & & X & X & X & &  \\ \hline
+  NFR3  & & X & & & & X & X & X & &  \\ \hline
+  NFR4    & & & & & & & & & X & X \\ \hline
+  NFR5     & & & & & & X & X & X & &  \\ \hline
   
   \end{tabular}
   \caption{Traceability Matrix Showing the Connections Between Test Cases and Functional Requirements}
@@ -514,7 +608,7 @@ How test will be performed:
 \fi 
 \bibliographystyle{plainnat}
 
-\bibliography{../../refs/References}
+\bibliography{References}
 
 \iffalse 
 

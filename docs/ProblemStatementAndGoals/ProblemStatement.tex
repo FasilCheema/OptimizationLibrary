@@ -2,6 +2,13 @@
 
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage{esvect}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{amsmath, mathtools}
+\usepackage{amssymb}
+
+
 
 \title{Problem Statement and Goals\\\progname}
 
@@ -23,13 +30,14 @@
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
 Jan 19, 2024 & Fasil Cheema & Initial Upload\\
+April 15, 2024 & Fasil Cheema & Revised Version\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \section{Problem Statement}
 
-The optimization of functions is a critical problem that is prevalent in many domains; such as engineering, operations research, physical analysis of systems, business analysis, and machine learning to name a few. To solve these problems is therefore a critical task and having a family of solvers that can properly find solutions successfully, quickly, and efficiently is vital. Therefore, to address this we seek to develop a library of functions to solve a multitude of optimization problems. For the scope of this project we choose to focus on two families of algorithms, the first of which is Conjugate Gradient methods; which includes methods such as the Fletcher-Reeves method. The other family of algorithms is the Quasi-Newton family which includes the Broyden-Fletcher-Goldfarb-Shanno (BFGS) method and the David-Fletcher-Powell (DFP) algorithm. Overall there will be several functions such as the golden-section line search for one-dimensional minimization/maximization, and the Nelder-Mead simplex method as well, which can be incorporated into the more complex methods stated prior.
+The optimization of functions is a critical problem that is prevalent in many domains; such as engineering, operations research, physical analysis of systems, business analysis, and machine learning to name a few. To solve these problems is therefore a critical task and having a family of solvers that can properly find solutions successfully, quickly, and efficiently is vital. Therefore, to address this we seek to develop a library of functions to solve a multitude of optimization problems. For the scope of this project we choose to focus on two families of algorithms, the first of which is Conjugate Gradient methods; which includes methods such as the Fletcher-Reeves method. The other family of algorithms is the Quasi-Newton family which includes the Broyden-Fletcher-Goldfarb-Shanno (BFGS) method and the David-Fletcher-Powell (DFP) algorithm. We will restrict the library to work on functions of the quadratic form. That is $f(\vv{x}) = \vv{x}^{T}\mathbf{A}\vv{x} + \vv{b}\vv{x} + c$, where $\mathbf{A} \in \mathbb{R}^{d \times d}$,$\vv{x} \in \mathbb{R}^{d \times 1}$,$\vv{b} \in \mathbb{R}^{1 \times d}$, and $c \in \mathbb{R}$.
 \\
 
 \subsection{Problem}

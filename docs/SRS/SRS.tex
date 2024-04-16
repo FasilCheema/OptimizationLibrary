@@ -160,6 +160,7 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 02/05/2024 & 1.0 & Initial Upload\\
+04/15/2024 & 2.0 & Revised Version\\
 \bottomrule
 \end{tabularx}
 
@@ -187,7 +188,7 @@ their units (not applicable in this document).  The choice of symbols was made t
 \midrule 
 $\mathbf{A}$ & \si[per-mode=symbol] {-} & $\mathbf{A}$ is the $n \times n$ matrix that is the leading term in the function (which can be expressed in the quadratic form) which we seek to minimize.
 \\
-$\vv{\bm{b}}$ & \si[per-mode=symbol] {-} & $\vv{\bm{b}}$ is the $n \times 1$ column vector that is the second term in the function (which is in the quadratic form) we are trying to minimize. 
+$\vv{b}$ & \si[per-mode=symbol] {-} & $\vv{b}$ is the $n \times 1$ column vector that is the second term in the function (which is in the quadratic form) we are trying to minimize. 
 \\ 
 $c$ & \si[per-mode=symbol] {-} & $c$ is the constant (real number) that is the third term in the function (which can be in the quadratic form) we are trying to minimize.
 \\
@@ -195,11 +196,11 @@ $f$ & \si[per-mode=symbol] {-} & $f$ is the function of interest which we are tr
 \\
 $n$ & \si[per-mode=symbol] {-} & $n$ is a natural number and is the dimensionality of our input variable $\vv{\bm{x}}$, and hence the dimensionality of our problem. 
 \\
-$\vv{\bm{x}}$ & \si[per-mode=symbol] {-} & $\vv{\bm{x}}$ is the $n \times 1$ column vector that is the input variable that goes into our function.
+$\vv{{x}}$ & \si[per-mode=symbol] {-} & $\vv{{x}}$ is the $n \times 1$ column vector that is the input variable that goes into our function.
 \\
-$\vv{\bm{x^*}}$ & \si[per-mode=symbol] {-} & $\vv{\bm{x^*}}$ is the $n \times 1$ column vector that is optimal (value of $\vv{\bm{x}}$ that when input into our function results in a minimum value).
+$\vv{{x^*}}$ & \si[per-mode=symbol] {-} & $\vv{{x^*}}$ is the $n \times 1$ column vector that is optimal (value of $\vv{{x}}$ that when input into our function results in a minimum value).
 \\
-$\vv{\bm{x_0}}$ & \si[per-mode=symbol] {-} & $\vv{\bm{x^*}}$ is the $n \times 1$ column vector that is the initial (value of $\vv{\bm{x}}$ that is input into our minimizer).
+$\vv{{x_0}}$ & \si[per-mode=symbol] {-} & $\vv{{x^*}}$ is the $n \times 1$ column vector that is the initial (value of $\vv{{x}}$ that is input into our minimizer).
 \\
 \bottomrule
 \end{longtable*}
@@ -322,7 +323,7 @@ This document will describe a family of optimizers used for function optimizatio
   
 
 \subsection{Scope of the Family} 
-The scope of the problem starts off with function optimization. Given a mathematical function our goal is to optimize the function which may imply finding all global/local minima or maxima. In the real world function optimization problems may also come with constraints attached to the function, this adds another dimension of difficulty in finding acceptable solutions. the complexity of the problem is hence directly related to the possible functions that can be passed to the optimizer, the convexity (or lack thereof) of the function, the constraints attached to the function, and the choice of optimizer. Given a convex optimization function most optimizers are guaranteed to obtain the global minimum/maximum in a certain number of steps. Even though we may be granted full access to a well defined function obtaining the optimum value is still a computationally difficult task.
+The scope of the problem starts off with function optimization. Given a mathematical function our goal is to optimize the function which may imply finding all global/local minima or maxima. In the real world function optimization problems may also come with constraints attached to the function, this adds another dimension of difficulty in finding acceptable solutions. The complexity of the problem is hence directly related to the possible functions that can be passed to the optimizer, the convexity (or lack thereof) of the function, the constraints attached to the function, and the choice of optimizer. Given a convex optimization function most optimizers are guaranteed to obtain the global minimum/maximum in a certain number of steps. Even though we may be granted full access to a well defined function obtaining the optimum value is still a computationally difficult task.
 \\
 
 We will limit ourselves to problems that are unconstrained. Also, instead of focusing on problems of minimization and maximization we will constrain the library to solve minimization problems specifically. Also to ensure the problem remains feasible we wish to limit the class of possible functions. We limit ourselves to the class of functions that can be expressed in quadratic form; that is quadratic, linear and constant functions. We will also assume these functions will be convex (this comes in later where we assume input matrices are positive semi-definite). Also functions will be described using matrices as we see later on. 
@@ -343,7 +344,7 @@ Clearly this problem domain is very general and abstract. To simplify the proble
 
 
 \subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
-The intended readers should have preliminary knowledge of function optimization. This would definitely be achieved if the individual has taken a course in convex optimization, numerical optimization, numerical methods, or discrete optimization. The reader should definitely have completed a high school mathematics curriculum and have a good grasp of preliminary mathematics taught in undergraduate degrees such as linear algebra and calculus. A reader should have knowledge on matrix operations, gradients, and Hessians.
+The intended readers should have preliminary knowledge of function optimization. This would definitely be achieved if the individual has taken a course in convex optimization, numerical optimization, numerical methods, or discrete optimization. The reader should definitely have completed a high school mathematics curriculum and have a good grasp of preliminary mathematics taught in undergraduate degrees such as linear algebra and calculus. A reader should have knowledge on matrix operations, gradients, and Hessians. To summarize, a 4th year undergraduate course in Continuous Optimization, 2nd year course in linear algebra, completed multivariate calculus 2nd year undergraduate, and a 3rd year introductory course on numerical methods are required for this project.
 \\
 
 \subsection{Organization of Document}
@@ -383,15 +384,16 @@ The first context can be seen in Figure \ref{img:FigureSystemContext} where a us
 \item Provide valid values of the initial value of $\vv{\bm{x}}$)
 \item Provide valid values of hyperparameters for the algorithm they employ
 \item Declare which minimizer they utilize from the library
-\item Ensure the function library use complies with the user guide
+\item Ensure the function library use complies with the usage described in the documentation
 \end{itemize}
-\item \progname{Optimization Library} Responsibilities:
+\item OptLib Responsibilities:
 \begin{itemize}
 \item Calculate the minimum value of a valid function if possible.
 \item Update the values of the current iteration according to the specific algorithm
 \item Determine the step size for the particular algorithm (if applicable for that algorithm)
 \item Detect data type mismatch, such as a string of characters instead of a
   floating point number
+\item Also detect invalid shapes of matrices and vectors (numpy arrays).
 \end{itemize}
 \end{itemize}
 
@@ -498,7 +500,7 @@ Given a function in an appropriate format, initial starting vector, and the corr
 \end{itemize}
 
 \subsection{Solution Characteristics Specification}
-In this section, information regarding the solution domain of the system is stated. The common themes of the minimizers in the family of minimizers is stated. There are two main families of solvers the \textit{Quasi-Newton} and the \textit{Conjugate-Gradient} methods. Even though there are two families they follow a similar template. They both start off with a starting `guess' of the point that returns the minimum. They then use their own specific methodology to compute a search direction and a step size (if applicable). They then obtain a new `guess' of the minimum by adding the search direction times the step size to the initial guess. This process iterates until a minimum is reached or we have exceeded the maximum number of steps. Eitehr way a value is returned to the user. \textit{Conjugate-Gradient} methods utilize conjugate search directions in the computation of search direction step. \textit{Quasi-Newton} methods compute the search direction with information utilizing a term that is an approximation to the Hessian.  
+In this section, information regarding the solution domain of the system is stated. The common themes of the minimizers in the family of minimizers is stated. There are two main families of solvers the \textit{Quasi-Newton} and the \textit{Conjugate-Gradient} methods. Even though there are two families they follow a similar template. They both start off with a starting `guess' of the point that returns the minimum. They then use their own specific methodology to compute a search direction and a step size (if applicable). They then obtain a new `guess' of the minimum by adding the search direction times the step size to the initial guess. This process iterates until a minimum is reached or we have exceeded the maximum number of steps. Either way a value is returned to the user. \textit{Conjugate-Gradient} methods utilize conjugate search directions in the computation of search direction step. \textit{Quasi-Newton} methods compute the search direction with information utilizing a term that is an approximation to the Hessian.  
 \\
 
 The instance models that govern the Optimization Library are presented in
@@ -546,7 +548,7 @@ This section provides theoretical models relevant to the optimization library.
 }
 % #5 description
 {
-  The above inequality is the definition of function convexity. For a convex function $f$, 2 points $x_1$ and $x_2$, and $0 \leq \lambda \leq 1$
+  The above inequality is the definition of function convexity. For a convex function $f$, 2 points $x_1$ and $x_2$, and $0 \leq \lambda \leq 1$. Note that $f: \mathbb{R}^{d \times 1} \rightarrow \mathbb{R}$ in our case. See TM:QUAD.
 }
 % #6 Notes
 {
@@ -555,6 +557,43 @@ None.
 % #7 Source
 {
   \url{https://en.wikipedia.org/wiki/Convex_function}
+}
+% #8 Referenced by
+{
+  GD\ref{gd:funcmin}
+}
+% #9 Preconditions
+{
+None
+}
+% #1 derivation - not applicable by default
+{}
+
+
+
+~\newline
+
+\noindent
+\deftheory
+% #2 refname of theory
+{TM:QUAD}
+% #3 label
+{Quadratic Form}
+% #4 equation
+{
+  $f(\vv{x}) = \vv{x}^{T}\mathbf{A}\vv{x} + \vv{b}\vv{x} + c$
+}
+% #5 description
+{
+  The above function describes the specific format of the problem we are trying to solve. This is known as the quadratic form where $\mathbf{A}$ is a matrix of dimension $d \times d$, $\vv{x}$ is a column vector of shape $\mathbb{R}^{d \times 1}$, and $\vv{b}$ is a row vector of shape $\mathbb{R}^{1 \times d}$, and c is a scalar.
+}
+% #6 Notes
+{
+None.
+}
+% #7 Source
+{
+  \url{https://en.wikipedia.org/wiki/Quadratic_form}
 }
 % #8 Referenced by
 {
@@ -875,7 +914,7 @@ qualities that the software is expected to exhibit.
 \noindent 
 \begin{itemize}
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{r:maxdim}:] The function and input vector are in the specified dimension which does not exceed maximum defined dimension.
+\item[R\refstepcounter{reqnum}\thereqnum \label{r:maxdim}:] The function and inputs are in the specified dimension which does not exceed maximum defined dimension.
 
 \item[R\refstepcounter{reqnum}\thereqnum \label{r:quadratic}:] The function provided can be expressed in quadratic form. 
 
@@ -910,7 +949,7 @@ Listed here are the nonfunctional requirements for the optimization library.
   \textbf{Portability} This library should be able to run on any system that can host an operating system and conduct computations from standard programming libraries.
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Interpretability}:]
-  \textbf{Interpretability} The library should be easily readable to domain experts.
+  \textbf{Interpretability} The library should be easily readable to domain experts. Domain experts that satisfy the reader characteristics and understand the algorithms in question and how to utilize them.
 
 \end{itemize}
 
@@ -978,9 +1017,10 @@ LC\ref{LC_unlikely1}       & & & \\
 \centering
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 \hline        
-	& TM:CON& DD\ref{dd:DotProd} & DD\ref{dd:Transpose} & DD\ref{dd:Gradient}& DD\ref{dd:Hessian} & IM\ref{im:linesearch}& IM\ref{im:CGsearchdirection}& IM\ref{im:QNsearchdirection}\\
+	& R1& R2 &  & DD\ref{dd:Gradient}& DD\ref{dd:Hessian} & IM\ref{im:linesearch}& IM\ref{im:CGsearchdirection}& IM\ref{im:QNsearchdirection}\\
 \hline
 TM:CON                    &X & & & & & & &  \\ \hline
+TM:QUAD                    &X & X & & X& X&X &X &X  \\ \hline
 GD\ref{gd:funcmin}        &X & & & & & & &  \\ \hline
 DD\ref{dd:DotProd}      & &X & & & & & &  \\ \hline
 DD\ref{dd:Transpose} & & &X & & & & &  \\ \hline
@@ -1037,9 +1077,11 @@ R\ref{r:quadratic}     & & & & & X \\ \hline
 
 \section{Values of Auxiliary Constants}
 
-$t_{\text{main}} = 0.1$
+$\epsilon_{\text{error}} = 0.00005$
 \\
 $\max_{\text{dim}} = 6$
+\\
+$\max_{\text{step}} = 100000$
 
 \newpage
 
