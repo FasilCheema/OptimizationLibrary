@@ -6,7 +6,7 @@ Fasil Cheema
 Date of project start:
 Jan 12, 2024
 
-This project is ...
+This project is an optimization library. It contains both Quasi-Newton and Conjugate Gradient methods. There are three methods BFGS, DFP, and the Fletcher-Reeves methods.
 
 The folders and files for this project are as follows:
 
