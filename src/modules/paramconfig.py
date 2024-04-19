@@ -3,6 +3,13 @@
 #Date   : March 20, 2024
 
 class paramconfig:
+    '''
+    This is an imporant class, when instantiated this gives us an instance 
+    that contains the relevant information to our specific problem. This defines the 
+    quadratic form and initial inputs that once provided are not changed throughout the 
+    running of the library but are critical as they define the behavior of the library.
+    The instance acts as a quick method 
+    '''
     
     def __init__(self,A_mat,b_vec,c,x_0,H_0,B_0,step_size,max_s,min_err):
         

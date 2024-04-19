@@ -5,7 +5,11 @@
 from vecmath import vecAdd, vecProd, vecT
 
 def compute_gradient(x_t, parameters):
-
+    '''
+    This function takes into account our specific case which is the quadratic form. 
+    In this problem we have an analytic solution to the gradient of the quadratic form.
+    This computation is done here; for more details on the math see MIS.
+    '''
     A_mat = parameters.A_mat
     b_vec = parameters.b_vec
 

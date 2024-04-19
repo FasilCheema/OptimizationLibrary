@@ -19,7 +19,10 @@ class InputVerifier:
         self.ERR_THRESH = constants.ERR_THRESH
 
     def inputverify(self, A_mat, b_vec, c, x_0, H_0, B_0, step_size, max_s, min_err):
-        
+        '''
+        The main function of the Verifier; we enumerate the possible error cases users can 
+        supply to the library and verify here that the inputs are valid.
+        '''
         if not(isinstance(A_mat,np.ndarray)):
             self.valid   = False
             err_str1 = "\n A_mat is not a valid numpy array "
